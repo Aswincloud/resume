@@ -1,3 +1,5 @@
+# Built artifact — produced by CI and published to the "latest" GitHub release.
+Aswin_Resume.pdf
 preview*.png
 photo.b64
 *.ppm

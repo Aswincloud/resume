@@ -1,0 +1,44 @@
+name: Build & Release Resume
+
+on:
+  push:
+    branches: [main]
+    paths: ['resume.html', 'photo.jpg', 'build.sh', '.github/workflows/build.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: resume-release
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+        id: chrome
+
+      - name: Install fonts (Liberation Sans)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends fonts-liberation
+
+      - name: Render PDF
+        run: BROWSER='${{ steps.chrome.outputs.chrome-path }}' ./build.sh
+
+      - name: Sanity-check output
+        run: test -s Aswin_Resume.pdf && file Aswin_Resume.pdf
+
+      - name: Publish rolling "latest" release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest Resume
+          body: |
+            Auto-built from `resume.html` on each push to `main`.
+            Commit ${{ github.sha }}.
+          files: Aswin_Resume.pdf
+          make_latest: true
