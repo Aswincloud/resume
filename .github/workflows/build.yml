@@ -58,6 +58,7 @@ jobs:
         run: |
           mkdir -p _site
           cp site/index.html _site/index.html
+          cp site/CNAME _site/CNAME
           cp Aswin_Resume.pdf _site/Aswin_Resume.pdf
 
       - name: Upload Pages artifact
