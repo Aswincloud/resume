@@ -3,11 +3,13 @@ name: Build & Release Resume
 on:
   push:
     branches: [main]
-    paths: ['resume.html', 'photo.jpg', 'build.sh', '.github/workflows/build.yml']
+    paths: ['resume.html', 'photo.jpg', 'build.sh', 'site/**', '.github/workflows/build.yml']
   workflow_dispatch:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: resume-release
@@ -16,6 +18,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -45,3 +50,21 @@ jobs:
             Commit ${{ github.sha }}.
           files: Aswin_Resume.pdf
           make_latest: true
+
+      # Publish a browser-viewable copy to GitHub Pages.
+      # Pages serves the PDF with Content-Type application/pdf (no attachment
+      # disposition), so it renders inline instead of downloading.
+      - name: Assemble Pages site
+        run: |
+          mkdir -p _site
+          cp site/index.html _site/index.html
+          cp Aswin_Resume.pdf _site/Aswin_Resume.pdf
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
