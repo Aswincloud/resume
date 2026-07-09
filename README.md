@@ -3,17 +3,19 @@
 Single-page resume built as a self-contained **HTML/CSS** file and rendered to PDF
 with headless Chromium. No design tool, no lock-in — edit the source, push, done.
 
-## Download
+## View / download
 
-Latest PDF (auto-built on every push to `main`):
+Auto-built on every push to `main`.
 
-**https://github.com/Aswincloud/resume/releases/latest/download/Aswin_Resume.pdf**
+- **View in browser:** https://aswincloud.github.io/resume/
+- **Download PDF:** https://github.com/Aswincloud/resume/releases/latest/download/Aswin_Resume.pdf
 
 ## Files
 - `resume.html` — the resume (all styling is inline CSS). Source of truth.
 - `photo.jpg` — headshot (circular crop is done in CSS).
 - `build.sh` — renders `resume.html` → `Aswin_Resume.pdf` (`BROWSER=… ./build.sh` to override the browser).
-- `.github/workflows/build.yml` — CI: renders the PDF and attaches it to the rolling `latest` release.
+- `site/index.html` — landing page that embeds the PDF for inline browser viewing (published to GitHub Pages).
+- `.github/workflows/build.yml` — CI: renders the PDF, publishes a per-build release, and deploys the viewer to GitHub Pages.
 
 The built PDF is **not** committed — CI is the source of the artifact (see the release link above).
 
