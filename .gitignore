@@ -3,3 +3,10 @@ Aswin_Resume.pdf
 preview*.png
 photo.b64
 *.ppm
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
