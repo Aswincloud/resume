@@ -1,0 +1,25 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "aswin-resume",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-07-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+
+  // Managed headless Chromium (Browser Run) used to render the PDF at runtime.
+  "browser": { "binding": "BROWSER" },
+
+  // Caches the rendered PDF keyed by a hash of the HTML, so we render once per
+  // resume version and serve from KV thereafter. Editing resume.html changes
+  // the bundled HTML -> new hash -> automatic re-render on next request.
+  "kv_namespaces": [
+    { "binding": "PDF_CACHE", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }
+  ],
+
+  // resume.embedded.html (self-contained: inline fonts + photo) is bundled as a
+  // text module via the rule below and imported in the Worker.
+  "rules": [
+    { "type": "Text", "globs": ["**/*.html"], "fallthrough": true }
+  ]
+}

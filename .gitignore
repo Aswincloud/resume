@@ -1,5 +1,13 @@
-# Built artifact — produced by CI and published to the "latest" GitHub release.
+# Built artifacts — produced by CI and published to the "latest" GitHub release.
 Aswin_Resume.pdf
 preview*.png
 photo.b64
 *.ppm
+
+# Node / Worker
+node_modules/
+.wrangler/
+worker-configuration.d.ts
+
+# Generated self-contained resume (rebuilt by scripts/embed.mjs on every build)
+resume.embedded.html
