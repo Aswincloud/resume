@@ -5,19 +5,22 @@ with headless Chromium. No design tool, no lock-in — edit the source, push, do
 
 ## View / download
 
-Auto-built on every push to `main`.
+Auto-built on every push to `main` and deployed to Cloudflare Pages.
 
 - **View in browser:** https://resume.aswincloud.com/
-- **Download PDF:** https://github.com/Aswincloud/resume/releases/latest/download/Aswin_Resume.pdf
+- **Download PDF:** https://resume.aswincloud.com/Aswin_Resume.pdf
+
+Pull requests get their own preview URL (posted as a PR comment) before anything
+reaches production.
 
 ## Files
 - `resume.html` — the resume (all styling is inline CSS). Source of truth.
 - `photo.jpg` — headshot (circular crop is done in CSS).
 - `build.sh` — renders `resume.html` → `Aswin_Resume.pdf` (`BROWSER=… ./build.sh` to override the browser).
-- `site/index.html` — landing page that embeds the PDF for inline browser viewing (published to GitHub Pages).
-- `.github/workflows/build.yml` — CI: renders the PDF, publishes a per-build release, and deploys the viewer to GitHub Pages.
+- `site/index.html` — landing page that embeds the PDF for inline browser viewing.
+- `.github/workflows/build.yml` — CI: renders the PDF and deploys the viewer + PDF to Cloudflare Pages (production on `main`, preview URLs on PRs).
 
-The built PDF is **not** committed — CI is the source of the artifact (see the release link above).
+The built PDF is **not** committed — CI renders and deploys it.
 
 ## Build locally
 ```bash
@@ -30,5 +33,5 @@ Fonts: Liberation Sans / Liberation Sans Bold.
 Navy (`#16215a`) sidebar with gold (`#c9a86b`) accents, circular photo, contact
 block with inline-SVG icons, skills / education / certifications in the sidebar;
 profile, an experience timeline, and projects in the main column. The sidebar
-color is a split `linear-gradient` on `body` so it extends to the page edge and
-across pages when printing.
+color is a split `linear-gradient` on `body` so it extends to the page edge.
+Layout is tuned to fit a single A4 page.

@@ -1,26 +1,25 @@
-name: Build & Release Resume
+name: Build & Deploy Resume
 
 on:
   push:
     branches: [main]
     paths: ['resume.html', 'photo.jpg', 'build.sh', 'site/**', '.github/workflows/build.yml']
+  pull_request:
+    paths: ['resume.html', 'photo.jpg', 'build.sh', 'site/**', '.github/workflows/build.yml']
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: read
+  pull-requests: write   # to post the preview URL as a PR comment
 
 concurrency:
-  group: resume-release
+  # Per-ref: a push to main and a PR build don't cancel each other.
+  group: resume-deploy-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -37,35 +36,41 @@ jobs:
       - name: Sanity-check output
         run: test -s Aswin_Resume.pdf && file Aswin_Resume.pdf
 
-      # One fresh tag per build. The org enforces immutable releases, so we never
-      # mutate an existing release — each run creates a new one and marks it latest,
-      # keeping the releases/latest/download/... URL pointing at the newest PDF.
-      - name: Publish release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: build-${{ github.run_number }}
-          name: Resume — build ${{ github.run_number }}
-          body: |
-            Auto-built from `resume.html`.
-            Commit ${{ github.sha }}.
-          files: Aswin_Resume.pdf
-          make_latest: true
-
-      # Publish a browser-viewable copy to GitHub Pages.
-      # Pages serves the PDF with Content-Type application/pdf (no attachment
-      # disposition), so it renders inline instead of downloading.
-      - name: Assemble Pages site
+      # Assemble the static site Cloudflare Pages will serve.
+      #   index.html  -> inline PDF viewer
+      #   Aswin_Resume.pdf -> the download target (resume.aswincloud.com/Aswin_Resume.pdf)
+      - name: Assemble site
         run: |
           mkdir -p _site
           cp site/index.html _site/index.html
-          cp site/CNAME _site/CNAME
           cp Aswin_Resume.pdf _site/Aswin_Resume.pdf
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      # Deploy to Cloudflare Pages.
+      #   branch == main  -> production (resume.aswincloud.com)
+      #   any other ref   -> a preview deployment with its own *.pages.dev URL
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
         with:
-          path: _site
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: >-
+            pages deploy _site
+            --project-name=aswin-resume
+            --branch=${{ github.head_ref || github.ref_name }}
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      # On PRs, surface the preview URL as a sticky comment.
+      - name: Comment preview URL on PR
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: resume-preview
+          message: |
+            ### 📄 Resume preview
+
+            Rendered from `resume.html` on this branch:
+
+            - **View:** ${{ steps.deploy.outputs.deployment-url }}
+            - **Branch alias:** ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+
+            Production (`resume.aswincloud.com`) updates when this PR merges to `main`.

@@ -23,11 +23,14 @@
     background:linear-gradient(to right, var(--navy) 0, var(--navy) var(--sidebar), #ffffff var(--sidebar), #ffffff 100%);
   }
 
-  .page{ display:grid; grid-template-columns:var(--sidebar) 1fr; min-height:297mm; }
+  /* The body linear-gradient (not this element) paints the navy sidebar to the
+     page edge, so .page needn't be full-height. Keeping min-height just under
+     the printable area avoids Chromium spilling a blank second page. */
+  .page{ display:grid; grid-template-columns:var(--sidebar) 1fr; min-height:280mm; }
 
   /* ---------------- SIDEBAR ---------------- */
-  .side{ color:#e9ecf5; padding:26px 22px 30px; }
-  .photo-wrap{ display:flex; justify-content:center; margin-bottom:22px; }
+  .side{ color:#e9ecf5; padding:22px 22px 26px; }
+  .photo-wrap{ display:flex; justify-content:center; margin-bottom:16px; }
   .photo{
     width:150px; height:150px; border-radius:50%;
     object-fit:cover; object-position:center 20%;
@@ -36,10 +39,10 @@
   }
   .side h2{
     font-size:12.5px; letter-spacing:2.4px; text-transform:uppercase;
-    color:var(--gold); font-weight:700; margin:22px 0 10px;
-    padding-bottom:6px; border-bottom:1px solid rgba(201,168,107,0.45);
+    color:var(--gold); font-weight:700; margin:16px 0 8px;
+    padding-bottom:5px; border-bottom:1px solid rgba(201,168,107,0.45);
   }
-  .side h2:first-of-type{ margin-top:4px; }
+  .side h2:first-of-type{ margin-top:2px; }
   .contact-row{ display:flex; gap:10px; align-items:center; font-size:11.5px; line-height:1.4; margin:8px 0; color:#dbe0ee; }
   .contact-row .ic{ width:15px; flex:0 0 15px; display:flex; align-items:center; justify-content:center; }
   .contact-row .ic svg{ width:14px; height:14px; fill:var(--gold); }
@@ -57,20 +60,20 @@
   .cert::before{ content:""; position:absolute; left:1px; top:5px; width:5px; height:5px; background:var(--gold); transform:rotate(45deg); }
 
   /* ---------------- MAIN ---------------- */
-  .main{ padding:30px 34px 30px 32px; }
+  .main{ padding:22px 34px 22px 32px; }
   .name{ font-size:38px; font-weight:800; color:var(--navy); letter-spacing:1px; line-height:1; }
   .role{ font-size:14.5px; font-weight:700; color:var(--gold); letter-spacing:3px; text-transform:uppercase; margin-top:8px; }
   .rule{ height:3px; background:linear-gradient(to right,var(--gold),var(--gold-soft)); width:100%; margin:16px 0 4px; border-radius:2px; }
 
-  .sec{ margin-top:20px; }
+  .sec{ margin-top:15px; }
   .sec-title{ font-size:15px; font-weight:800; color:var(--navy); text-transform:uppercase; letter-spacing:2px; display:flex; align-items:center; gap:10px; }
   .sec-title::after{ content:""; flex:1; height:1.5px; background:var(--line); }
 
-  .summary{ font-size:12.3px; line-height:1.6; color:var(--muted); margin-top:10px; }
+  .summary{ font-size:12.3px; line-height:1.55; color:var(--muted); margin-top:8px; }
 
   /* timeline */
-  .tl{ margin-top:12px; padding-left:18px; border-left:2px solid var(--line); }
-  .job{ position:relative; margin-bottom:15px; }
+  .tl{ margin-top:10px; padding-left:18px; border-left:2px solid var(--line); }
+  .job{ position:relative; margin-bottom:12px; }
   .job::before{
     content:""; position:absolute; left:-25px; top:4px;
     width:11px; height:11px; border-radius:50%; background:var(--gold);
@@ -81,12 +84,12 @@
   .job .meta{ font-size:11px; color:var(--muted); font-style:italic; white-space:nowrap; }
   .job .sub{ font-size:11.5px; color:var(--gold); font-weight:700; margin:1px 0 6px; }
   ul.pts{ list-style:none; margin:4px 0 0; }
-  ul.pts li{ font-size:11.8px; line-height:1.5; color:var(--ink); padding-left:16px; position:relative; margin:4px 0; }
+  ul.pts li{ font-size:11.6px; line-height:1.42; color:var(--ink); padding-left:16px; position:relative; margin:2.5px 0; }
   ul.pts li::before{ content:""; position:absolute; left:1px; top:6px; width:0; height:0; border-style:solid; border-width:3.5px 0 3.5px 5.5px; border-color:transparent transparent transparent var(--gold); }
 
-  .proj{ margin-bottom:11px; }
+  .proj{ margin-bottom:8px; }
   .proj .title{ font-size:12.8px; font-weight:800; color:var(--navy); }
-  .proj .desc{ font-size:11.6px; line-height:1.5; color:var(--muted); margin-top:2px; }
+  .proj .desc{ font-size:11.6px; line-height:1.45; color:var(--muted); margin-top:2px; }
   .proj .desc .stack{ color:var(--gold); font-weight:600; }
   .proj .desc a{ color:var(--navy); text-decoration:none; font-weight:600; }
 </style>
@@ -134,7 +137,7 @@
 
       <div class="sec">
         <div class="sec-title">Profile</div>
-        <p class="summary">Software engineer working close to the metal on the software that runs on next-generation AI accelerator hardware. I build and optimize compute kernels, profile and benchmark tensor operations, and hunt bottlenecks across the stack to drive device throughput. Equally comfortable owning end-to-end model tracing and validation and building the tooling, dashboards, and cloud infrastructure around the work.</p>
+        <p class="summary">Software engineer working close to the metal on next-generation AI accelerator hardware. I build and optimize low-level compute kernels, profile and benchmark tensor operations, and hunt bottlenecks across the stack to drive device throughput — and own end-to-end model tracing and validation plus the tooling and infrastructure around it.</p>
       </div>
 
       <div class="sec">
