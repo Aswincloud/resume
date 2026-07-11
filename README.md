@@ -7,7 +7,7 @@ with headless Chromium. No design tool, no lock-in — edit the source, push, do
 
 Auto-built on every push to `main`.
 
-- **View in browser:** https://aswincloud.github.io/resume/
+- **View in browser:** https://resume.aswincloud.com/
 - **Download PDF:** https://github.com/Aswincloud/resume/releases/latest/download/Aswin_Resume.pdf
 
 ## Files
