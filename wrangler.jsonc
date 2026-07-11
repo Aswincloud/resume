@@ -14,7 +14,7 @@
   // resume version and serve from KV thereafter. Editing resume.html changes
   // the bundled HTML -> new hash -> automatic re-render on next request.
   "kv_namespaces": [
-    { "binding": "PDF_CACHE", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }
+    { "binding": "PDF_CACHE", "id": "d3abad4f96f34fd6a30897a56df45793" }
   ],
 
   // resume.embedded.html (self-contained: inline fonts + photo) is bundled as a
