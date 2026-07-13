@@ -61,12 +61,22 @@ export default {
       return new Response("Method Not Allowed", { status: 405 });
     }
 
-    // Inline viewer.
+    // The resume itself, served as a real HTML page (same source the PDF is
+    // rendered from → identical look, but selectable text + SEO + responsive).
     if (path === "/" || path === "/index.html") {
-      return new Response(VIEWER_HTML, {
+      const hash = await contentHash(RESUME_HTML);
+      const etag = `"web-${hash}"`;
+      if (request.headers.get("if-none-match") === etag) {
+        return new Response(null, {
+          status: 304,
+          headers: { etag, "cache-control": "public, max-age=60, must-revalidate" },
+        });
+      }
+      return new Response(webPage(RESUME_HTML), {
         headers: {
           "content-type": "text/html; charset=utf-8",
-          "cache-control": "public, max-age=300",
+          etag,
+          "cache-control": "public, max-age=60, must-revalidate",
         },
       });
     }
@@ -112,32 +122,54 @@ export default {
   },
 } satisfies ExportedHandler<Env>;
 
-// Minimal viewer that embeds the PDF and offers a download button.
-const VIEWER_HTML = `<!doctype html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Aswin — Resume</title>
-<meta name="description" content="Aswin — Software Engineer. Resume.">
-<style>
-  :root{--navy:#16215a;--gold:#c9a86b}
-  *{box-sizing:border-box}html,body{margin:0;height:100%}
-  body{font-family:Arial,Helvetica,sans-serif;background:#eef0f4;color:var(--navy);display:flex;flex-direction:column;min-height:100vh}
-  header{background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 20px;flex-wrap:wrap}
-  header .who{font-size:18px;font-weight:bold;letter-spacing:.5px}
-  header .who span{color:var(--gold);margin-left:8px;letter-spacing:2px;font-size:13px;text-transform:uppercase}
-  .dl{background:var(--gold);color:var(--navy);text-decoration:none;font-weight:bold;font-size:14px;padding:9px 16px;border-radius:6px;white-space:nowrap}
-  main{flex:1;display:flex}object,iframe{flex:1;width:100%;border:0}
-  .fallback{padding:40px;text-align:center}.fallback a{color:var(--navy)}
-</style></head>
-<body>
-  <header>
-    <div class="who">Aswin<span>Software Engineer</span></div>
-    <a class="dl" href="/${PDF_FILENAME}?download">Download PDF</a>
-  </header>
-  <main>
-    <object data="/${PDF_FILENAME}" type="application/pdf">
-      <div class="fallback"><p>Your browser can't display the PDF inline.</p>
-      <p><a href="/${PDF_FILENAME}?download">Download the resume PDF</a></p></div>
-    </object>
-  </main>
-</body></html>`;
+// Turn the print-oriented resume.html into a web page: add page metadata, a
+// floating Download-PDF button, and screen-only responsive styling. Everything
+// injected is scoped to @media screen, so it can never affect the PDF (which
+// is rendered from the untouched RESUME_HTML with print emulation).
+function webPage(resumeHtml: string): string {
+  const head = `
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aswin — Software Engineer · Resume</title>
+  <meta name="description" content="Aswin — Software Engineer working on next-generation AI accelerator hardware: compute kernels, profiling, and model tracing.">
+  <meta property="og:title" content="Aswin — Software Engineer">
+  <meta property="og:description" content="Resume — AI-accelerator software engineer.">
+  <meta property="og:type" content="profile">
+  <style>
+  @media screen {
+    html { background:#e9ecf3; }
+    /* Center the A4 sheet and give it depth on desktop. */
+    body { margin:0 auto; max-width:210mm; box-shadow:0 6px 30px rgba(22,33,90,.18); }
+    /* Floating download button — fixed so it stays reachable while scrolling. */
+    #dl { position:fixed; right:16px; bottom:16px; z-index:50;
+      background:#c9a86b; color:#16215a; text-decoration:none; font-weight:700;
+      font-family:Arial,Helvetica,sans-serif; font-size:14px;
+      padding:11px 18px; border-radius:8px; box-shadow:0 3px 12px rgba(0,0,0,.25); }
+    #dl:hover { filter:brightness(1.05); }
+  }
+  /* Phones: reflow the fixed-A4 two-column grid to one readable column.
+     The navy sidebar is a linear-gradient painted on <body> at the 34% split,
+     not a real element background — so when we stack the columns we must kill
+     that gradient and give each column its own solid background, or text lands
+     on the wrong colour. */
+  @media screen and (max-width:640px) {
+    html { background:#fff; }
+    body { max-width:none; box-shadow:none; background:#16215a !important; }
+    .page { display:block !important; min-height:0 !important; }
+    .side { width:100% !important; background:#16215a !important; }
+    .main { width:100% !important; background:#fff !important; }
+    .name { font-size:30px !important; }
+    #dl { left:16px; right:16px; text-align:center; }
+  }
+  /* Belt-and-suspenders: never show the button when printing from the browser. */
+  @media print { #dl { display:none !important; } }
+  </style>`;
+
+  const dlButton = `<a id="dl" href="/${PDF_FILENAME}?download">↓ Download PDF</a>`;
+
+  let out = resumeHtml;
+  // Inject metadata + styles right after <head> (resume.html has a bare <head>).
+  out = out.replace(/<head>/i, `<head>${head}`);
+  // Drop the floating button just inside <body>.
+  out = out.replace(/<body>/i, `<body>${dlButton}`);
+  return out;
+}
