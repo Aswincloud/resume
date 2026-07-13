@@ -37,15 +37,19 @@ async function renderPdf(env: Env): Promise<Uint8Array> {
   }
 }
 
-async function getPdf(env: Env, ctx: ExecutionContext): Promise<Uint8Array> {
-  const key = `pdf:${await contentHash(RESUME_HTML)}`;
+async function getPdf(
+  env: Env,
+  ctx: ExecutionContext,
+): Promise<{ pdf: Uint8Array; hash: string }> {
+  const hash = await contentHash(RESUME_HTML);
+  const key = `pdf:${hash}`;
   const cached = await env.PDF_CACHE.get(key, "arrayBuffer");
-  if (cached) return new Uint8Array(cached);
+  if (cached) return { pdf: new Uint8Array(cached), hash };
 
   const pdf = await renderPdf(env);
   // Persist without blocking the response.
   ctx.waitUntil(env.PDF_CACHE.put(key, pdf));
-  return pdf;
+  return { pdf, hash };
 }
 
 export default {
@@ -70,12 +74,25 @@ export default {
     // The PDF: view inline (default) or force download (?download).
     if (path === `/${PDF_FILENAME}`) {
       let pdf: Uint8Array;
+      let hash: string;
       try {
-        pdf = await getPdf(env, ctx);
+        ({ pdf, hash } = await getPdf(env, ctx));
       } catch (err) {
         console.log(JSON.stringify({ msg: "pdf render failed", err: String(err) }));
         return new Response("Failed to render PDF.", { status: 502 });
       }
+
+      // ETag is the content hash: when resume.html changes the hash changes,
+      // so caches revalidate and pick up the new render immediately instead of
+      // serving a stale copy for the full max-age.
+      const etag = `"${hash}"`;
+      if (request.headers.get("if-none-match") === etag) {
+        return new Response(null, {
+          status: 304,
+          headers: { etag, "cache-control": "public, max-age=60, must-revalidate" },
+        });
+      }
+
       const disposition = url.searchParams.has("download")
         ? `attachment; filename="${PDF_FILENAME}"`
         : `inline; filename="${PDF_FILENAME}"`;
@@ -83,7 +100,10 @@ export default {
         headers: {
           "content-type": "application/pdf",
           "content-disposition": disposition,
-          "cache-control": "public, max-age=3600",
+          etag,
+          // Short TTL + revalidation: fast repeat loads, but an edit is visible
+          // within ~a minute rather than pinned for an hour.
+          "cache-control": "public, max-age=60, must-revalidate",
         },
       });
     }
