@@ -10,6 +10,15 @@ interface Env {
 
 const PDF_FILENAME = "Aswin_Resume.pdf";
 
+// Brand favicon: gold "A" monogram on a rounded navy tile (matches the resume's
+// #16215a / #c9a86b palette). Inlined as a data-URI in <head> and also served
+// at /favicon.ico for clients that request it directly.
+const FAVICON_SVG =
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">` +
+  `<rect width="64" height="64" rx="14" fill="#16215a"/>` +
+  `<text x="32" y="45" font-family="Arial,Helvetica,sans-serif" font-size="40"` +
+  ` font-weight="700" text-anchor="middle" fill="#c9a86b">A</text></svg>`;
+
 // Short, stable content hash of the bundled HTML → cache key. A resume edit
 // changes RESUME_HTML → new key → transparent re-render.
 async function contentHash(s: string): Promise<string> {
@@ -59,6 +68,16 @@ export default {
 
     if (request.method !== "GET" && request.method !== "HEAD") {
       return new Response("Method Not Allowed", { status: 405 });
+    }
+
+    // Favicon (also referenced inline in the page <head>). Served as SVG.
+    if (path === "/favicon.ico" || path === "/favicon.svg") {
+      return new Response(FAVICON_SVG, {
+        headers: {
+          "content-type": "image/svg+xml",
+          "cache-control": "public, max-age=86400",
+        },
+      });
     }
 
     // The resume itself, served as a real HTML page (same source the PDF is
@@ -129,6 +148,7 @@ export default {
 function webPage(resumeHtml: string): string {
   const head = `
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:image/svg+xml,${encodeURIComponent(FAVICON_SVG)}">
   <title>Aswin — Software Engineer · Resume</title>
   <meta name="description" content="Aswin — Software Engineer working on next-generation AI accelerator hardware: compute kernels, profiling, and model tracing.">
   <meta property="og:title" content="Aswin — Software Engineer">
