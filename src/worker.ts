@@ -177,10 +177,10 @@ function webPage(resumeHtml: string): string {
     body { margin:0 auto; max-width:210mm; box-shadow:0 6px 30px rgba(22,33,90,.18); }
   }
   /* Phones: reflow the fixed-A4 two-column grid to one readable column.
-     The navy sidebar is a linear-gradient painted on <body> at the 34% split,
-     not a real element background — so when we stack the columns we must kill
-     that gradient and give each column its own solid background, or text lands
-     on the wrong colour. */
+     The navy sidebar is a linear-gradient painted on the page background at the
+     34% split, not a real element background — so when we stack the columns we
+     must kill that gradient and give each column its own solid background, or
+     text lands on the wrong colour. */
   @media screen and (max-width:640px) {
     html { background:#fff; }
     body { max-width:none; box-shadow:none; background:#16215a !important; }
@@ -199,10 +199,11 @@ function webPage(resumeHtml: string): string {
     `<div id="topbar"><div class="who">Aswin<span>Software Engineer</span></div>` +
     `<a id="dl" href="/${PDF_FILENAME}?download">↓ Download PDF</a></div>`;
 
-  let out = resumeHtml;
-  // Inject metadata + styles right after <head> (resume.html has a bare <head>).
+  // Order matters: do the <body> injection on the RAW resume first, so the
+  // regex can only match the real body tag — not a literal "<body>" that
+  // appears inside a CSS comment in the head we inject below.
+  let out = resumeHtml.replace(/<body>/i, `<body>${topBar}`);
+  // Then inject metadata + styles right after <head> (resume.html has a bare <head>).
   out = out.replace(/<head>/i, `<head>${head}`);
-  // Put the sticky bar first inside <body>, above the resume sheet.
-  out = out.replace(/<body>/i, `<body>${topBar}`);
   return out;
 }
