@@ -55,7 +55,10 @@ npm run deploy         # embed + wrangler deploy
 
 Deploys are wired through **Cloudflare Workers' Git integration**: push to `main`
 deploys production (`resume.aswincloud.com`), and pull requests get their own
-preview URL automatically — no GitHub Actions.
+preview URL automatically — no GitHub Actions for deploys.
+
+The only workflow in the repo is `.github/workflows/auto-approve.yml`, which
+auto-approves admin PRs; it plays no part in building or deploying the resume.
 
 ### One-time setup
 1. Create a KV namespace and put its id in `wrangler.jsonc` (`PDF_CACHE` binding).
