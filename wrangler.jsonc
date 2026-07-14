@@ -10,6 +10,12 @@
   // PR comment. Without this the deploy succeeds but no Preview URL is shown.
   "preview_urls": true,
 
+  // Generate the self-contained resume.embedded.html (inline fonts + photo)
+  // before bundling. Put here (not just npm predeploy hooks) so it runs no
+  // matter which wrangler command CI invokes — `deploy` (production) or
+  // `versions upload` (non-production / preview builds).
+  "build": { "command": "npm run embed" },
+
   "observability": { "enabled": true, "head_sampling_rate": 1 },
 
   // Managed headless Chromium (Browser Run) used to render the PDF at runtime.
