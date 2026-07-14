@@ -4,99 +4,73 @@
 <meta charset="utf-8" />
 <style>
   :root{
-    --navy:#16215a;
-    --navy-2:#1d2c6e;
-    --gold:#c9a86b;
-    --gold-soft:#e6d4ac;
-    --ink:#2b2f3a;
+    --indigo:#4338ca;
+    --indigo-2:#6366f1;
+    --ink:#1e2230;
     --muted:#5b6172;
-    --line:#e2e5ec;
-    --sidebar:34%;
+    --line:#e6e8f0;
+    --side-bg:#f3f4fb;
+    --sidebar:35%;
   }
   *{ box-sizing:border-box; margin:0; padding:0; }
   html,body{ font-family:"Liberation Sans","Helvetica Neue",Arial,sans-serif; color:var(--ink); }
   @page{ size:A4; margin:0; }
-
-  /* Split background so the navy sidebar continues onto every printed page */
-  body{
-    -webkit-print-color-adjust:exact; print-color-adjust:exact;
-    background:linear-gradient(to right, var(--navy) 0, var(--navy) var(--sidebar), #ffffff var(--sidebar), #ffffff 100%);
-  }
-
-  /* The body linear-gradient (not this element) paints the navy sidebar to the
-     page edge, so .page needn't be full-height. Keeping min-height just under
-     the printable area avoids Chromium spilling a blank second page. */
+  body{ -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    background:linear-gradient(to right, var(--side-bg) 0, var(--side-bg) var(--sidebar), #fff var(--sidebar), #fff 100%); }
   .page{ display:grid; grid-template-columns:var(--sidebar) 1fr; min-height:280mm; }
 
-  /* ---------------- SIDEBAR ---------------- */
-  .side{ color:#e9ecf5; padding:22px 22px 26px; }
-  .photo-wrap{ display:flex; justify-content:center; margin-bottom:16px; }
-  .photo{
-    width:150px; height:150px; border-radius:50%;
-    object-fit:cover; object-position:center 20%;
-    border:3px solid var(--gold);
-    box-shadow:0 0 0 6px rgba(201,168,107,0.18);
-  }
-  .side h2{
-    font-size:12.5px; letter-spacing:2.4px; text-transform:uppercase;
-    color:var(--gold); font-weight:700; margin:16px 0 8px;
-    padding-bottom:5px; border-bottom:1px solid rgba(201,168,107,0.45);
-  }
-  .side h2:first-of-type{ margin-top:2px; }
-  .contact-row{ display:flex; gap:10px; align-items:center; font-size:11.5px; line-height:1.4; margin:8px 0; color:#dbe0ee; }
-  .contact-row .ic{ width:15px; flex:0 0 15px; display:flex; align-items:center; justify-content:center; }
-  .contact-row .ic svg{ width:14px; height:14px; fill:var(--gold); }
-  .contact-row a{ color:#dbe0ee; text-decoration:none; word-break:break-word; }
+  /* sidebar */
+  .side{ padding:24px 20px 26px; }
+  .photo-wrap{ display:flex; justify-content:center; margin-bottom:18px; }
+  .photo{ width:140px; height:140px; border-radius:18px; object-fit:cover; object-position:center 20%; box-shadow:0 6px 18px rgba(67,56,202,.18); }
+  .side h2{ font-size:11.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--indigo); font-weight:800; margin:18px 0 9px; }
+  .contact-row{ display:flex; gap:9px; align-items:center; font-size:11px; line-height:1.4; margin:7px 0; color:var(--muted); }
+  .contact-row .ic{ width:22px; height:22px; flex:0 0 22px; border-radius:6px; background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(30,34,48,.08); }
+  .contact-row .ic svg{ width:12px; height:12px; fill:var(--indigo); }
+  .contact-row a{ color:var(--muted); text-decoration:none; word-break:break-word; }
 
   .skill-group{ margin:9px 0; }
-  .skill-group .k{ font-size:11px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:.6px; }
-  .skill-group .v{ font-size:11.5px; color:#cfd5e6; line-height:1.5; margin-top:2px; }
+  .skill-group .k{ font-size:10.5px; font-weight:800; color:var(--ink); text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+  .tags{ display:flex; flex-wrap:wrap; gap:5px; }
+  .tag{ font-size:10px; color:var(--indigo); background:#fff; border:1px solid #dfe0f2; border-radius:999px; padding:3px 9px; }
+  .skill-group .v{ font-size:11px; color:var(--muted); line-height:1.5; }
 
-  .edu-block{ margin:8px 0; }
-  .edu-block .d{ font-size:12px; font-weight:700; color:#fff; line-height:1.35; }
-  .edu-block .s{ font-size:11px; color:#c7cde0; line-height:1.4; margin-top:2px; }
+  .edu .d{ font-size:11.5px; font-weight:800; color:var(--ink); line-height:1.35; }
+  .edu .s{ font-size:10.8px; color:var(--muted); line-height:1.4; margin-top:2px; }
+  .cert{ font-size:10.8px; color:var(--muted); line-height:1.4; margin:6px 0; padding-left:15px; position:relative; }
+  .cert::before{ content:""; position:absolute; left:2px; top:5px; width:6px; height:6px; border-radius:50%; background:var(--indigo-2); }
 
-  .cert{ font-size:11.5px; color:#dbe0ee; line-height:1.45; margin:6px 0; padding-left:15px; position:relative; }
-  .cert::before{ content:""; position:absolute; left:1px; top:5px; width:5px; height:5px; background:var(--gold); transform:rotate(45deg); }
+  /* main */
+  .main{ padding:26px 34px 24px 32px; }
+  .name{ font-size:40px; font-weight:800; color:var(--indigo); letter-spacing:.5px; line-height:1; }
+  .role{ font-size:14px; font-weight:700; color:var(--ink); letter-spacing:3px; text-transform:uppercase; margin-top:8px; }
+  .rule{ height:3px; width:60px; background:var(--indigo-2); margin:16px 0 4px; border-radius:2px; }
 
-  /* ---------------- MAIN ---------------- */
-  .main{ padding:22px 34px 22px 32px; }
-  .name{ font-size:38px; font-weight:800; color:var(--navy); letter-spacing:1px; line-height:1; }
-  .role{ font-size:14.5px; font-weight:700; color:var(--gold); letter-spacing:3px; text-transform:uppercase; margin-top:8px; }
-  .rule{ height:3px; background:linear-gradient(to right,var(--gold),var(--gold-soft)); width:100%; margin:16px 0 4px; border-radius:2px; }
-
-  .sec{ margin-top:15px; }
-  .sec-title{ font-size:15px; font-weight:800; color:var(--navy); text-transform:uppercase; letter-spacing:2px; display:flex; align-items:center; gap:10px; }
+  .sec{ margin-top:16px; }
+  .sec-title{ font-size:14px; font-weight:800; color:var(--indigo); text-transform:uppercase; letter-spacing:1.5px; display:flex; align-items:center; gap:10px; }
   .sec-title::after{ content:""; flex:1; height:1.5px; background:var(--line); }
+  .summary{ font-size:12.2px; line-height:1.55; color:var(--muted); margin-top:8px; }
 
-  .summary{ font-size:12.3px; line-height:1.55; color:var(--muted); margin-top:8px; }
-
-  /* timeline */
   .tl{ margin-top:10px; padding-left:18px; border-left:2px solid var(--line); }
   .job{ position:relative; margin-bottom:12px; }
-  .job::before{
-    content:""; position:absolute; left:-25px; top:4px;
-    width:11px; height:11px; border-radius:50%; background:var(--gold);
-    border:2px solid #fff; box-shadow:0 0 0 1.5px var(--gold);
-  }
+  .job::before{ content:""; position:absolute; left:-25px; top:4px; width:11px; height:11px; border-radius:50%; background:var(--indigo-2); border:2px solid #fff; box-shadow:0 0 0 1.5px var(--indigo-2); }
   .job .h{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; }
-  .job .title{ font-size:13.5px; font-weight:800; color:var(--navy); }
+  .job .title{ font-size:13.5px; font-weight:800; color:var(--ink); }
   .job .meta{ font-size:11px; color:var(--muted); font-style:italic; white-space:nowrap; }
-  .job .sub{ font-size:11.5px; color:var(--gold); font-weight:700; margin:1px 0 6px; }
-  ul.pts{ list-style:none; margin:4px 0 0; }
-  ul.pts li{ font-size:11.6px; line-height:1.42; color:var(--ink); padding-left:16px; position:relative; margin:2.5px 0; }
-  ul.pts li::before{ content:""; position:absolute; left:1px; top:6px; width:0; height:0; border-style:solid; border-width:3.5px 0 3.5px 5.5px; border-color:transparent transparent transparent var(--gold); }
+  .job .sub{ font-size:11.5px; color:var(--indigo); font-weight:700; margin:1px 0 6px; }
+  ul.pts{ list-style:none; }
+  ul.pts li{ font-size:11.4px; line-height:1.42; color:var(--ink); padding-left:16px; position:relative; margin:2.5px 0; }
+  ul.pts li::before{ content:""; position:absolute; left:2px; top:6px; width:5px; height:5px; border-radius:1.5px; background:var(--indigo-2); }
 
-  .proj{ margin-bottom:8px; }
-  .proj .title{ font-size:12.8px; font-weight:800; color:var(--navy); }
-  .proj .desc{ font-size:11.6px; line-height:1.45; color:var(--muted); margin-top:2px; }
-  .proj .desc .stack{ color:var(--gold); font-weight:600; }
-  .proj .desc a{ color:var(--navy); text-decoration:none; font-weight:600; }
+  .proj{ margin-bottom:9px; }
+  .proj .title{ font-size:12.6px; font-weight:800; color:var(--ink); }
+  .proj .desc{ font-size:11.4px; line-height:1.45; color:var(--muted); margin-top:2px; }
+  .proj .desc .stack{ color:var(--indigo); font-weight:600; }
+  .proj .desc a{ color:var(--indigo); text-decoration:none; font-weight:600; }
 </style>
 </head>
 <body>
   <div class="page">
-    <!-- ============ SIDEBAR ============ -->
     <aside class="side">
       <div class="photo-wrap"><img class="photo" src="photo.jpg" alt="Aswin" /></div>
 
@@ -109,18 +83,15 @@
       <div class="contact-row"><span class="ic"><svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H6.5v-7H9v7zM7.7 8.7a1.4 1.4 0 110-2.8 1.4 1.4 0 010 2.8zM18 17h-2.5v-3.6c0-.9 0-2-1.2-2s-1.4 1-1.4 1.9V17H10.4v-7h2.4v1h.1c.3-.6 1.1-1.2 2.3-1.2 2.5 0 2.9 1.6 2.9 3.7V17z"/></svg></span><a href="https://linkedin.com/in/aswin4122001">linkedin.com/in/aswin4122001</a></div>
 
       <h2>Skills</h2>
+      <div class="skill-group"><div class="k">Languages</div><div class="tags"><span class="tag">Python</span><span class="tag">C++</span><span class="tag">C</span><span class="tag">Java</span><span class="tag">SQL</span></div></div>
       <div class="skill-group"><div class="k">Performance</div><div class="v">Profiling, benchmarking, kernel optimization, bottleneck analysis, low-level compute kernels</div></div>
-      <div class="skill-group"><div class="k">Languages</div><div class="v">Python, C++, C, Java, SQL</div></div>
       <div class="skill-group"><div class="k">AI Hardware</div><div class="v">AI-accelerator software stacks, compute-kernel development</div></div>
-      <div class="skill-group"><div class="k">Tooling</div><div class="v">Git &amp; GitHub, CI/CD (GitHub Actions), pytest, PyPI, device/kernel profilers</div></div>
-      <div class="skill-group"><div class="k">Cloud / Infra</div><div class="v">Cloudflare — site hosting, Tunnels, Zero Trust / Access auth; self-hosted services</div></div>
+      <div class="skill-group"><div class="k">Tooling</div><div class="tags"><span class="tag">Git</span><span class="tag">GitHub Actions</span><span class="tag">pytest</span><span class="tag">PyPI</span><span class="tag">profilers</span></div></div>
+      <div class="skill-group"><div class="k">Cloud / Infra</div><div class="v">Cloudflare — hosting, Tunnels, Zero Trust / Access auth; self-hosted services</div></div>
       <div class="skill-group"><div class="k">Other</div><div class="v">PCB design, Linux &amp; shell scripting</div></div>
 
       <h2>Education</h2>
-      <div class="edu-block">
-        <div class="d">B.Tech, Electronics &amp; Communication Engineering</div>
-        <div class="s">Sri Manakula Vinayagar Engineering College, Puducherry<br/>2019 – 2023 &nbsp;•&nbsp; CGPA 8.5 / 10</div>
-      </div>
+      <div class="edu"><div class="d">B.Tech, Electronics &amp; Communication Engineering</div><div class="s">Sri Manakula Vinayagar Engineering College, Puducherry<br/>2019 – 2023 &nbsp;•&nbsp; CGPA 8.5 / 10</div></div>
 
       <h2>Certifications</h2>
       <div class="cert">SkillRack — 300+ problem-solving medals in C &amp; Java</div>
@@ -129,7 +100,6 @@
       <div class="cert">TCS iON — Career Edge</div>
     </aside>
 
-    <!-- ============ MAIN ============ -->
     <main class="main">
       <div class="name">ASWIN</div>
       <div class="role">Software Engineer</div>
@@ -144,10 +114,7 @@
         <div class="sec-title">Experience</div>
         <div class="tl">
           <div class="job">
-            <div class="h">
-              <span class="title">Software Engineer</span>
-              <span class="meta">Jun 2023 – Present</span>
-            </div>
+            <div class="h"><span class="title">Software Engineer</span><span class="meta">Jun 2023 – Present</span></div>
             <div class="sub">MulticoreWare Pvt Ltd · Chennai, India</div>
             <ul class="pts">
               <li>Software engineering for a leading AI silicon company’s accelerator stack — developing and optimizing the software that runs on next-generation AI chips.</li>
@@ -159,10 +126,7 @@
             </ul>
           </div>
           <div class="job">
-            <div class="h">
-              <span class="title">Industrial Project Engineer</span>
-              <span class="meta">Jun 2022 – May 2023</span>
-            </div>
+            <div class="h"><span class="title">Industrial Project Engineer</span><span class="meta">Jun 2022 – May 2023</span></div>
             <div class="sub">Lenovo Pvt Ltd · Pondicherry, India</div>
             <ul class="pts">
               <li>Developed and maintained a smart attendance system using face-recognition technology with database integration.</li>
@@ -181,7 +145,7 @@
         </div>
         <div class="proj">
           <div class="title">Eltwise Performance Tracker</div>
-          <div class="desc">Day-by-day performance monitoring for element-wise operations on AI-accelerator hardware — tracks kernel-timing trends across dates, correlates regressions to git commits, and sends automated alerts on &gt;20% changes.<br/><a href="https://ttnn-eltwise-performance.aswincloud.com">ttnn-eltwise-performance.aswincloud.com</a></div>
+          <div class="desc">Day-by-day performance monitoring for element-wise operations on AI-accelerator hardware — tracks kernel-timing trends across dates, correlates regressions to git commits, and sends automated alerts on &gt;20% changes. <a href="https://ttnn-eltwise-performance.aswincloud.com">ttnn-eltwise-performance.aswincloud.com</a></div>
         </div>
         <div class="proj">
           <div class="title">Academic Projects — B.Tech ECE</div>
