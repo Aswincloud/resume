@@ -5,6 +5,11 @@
   "compatibility_date": "2026-07-01",
   "compatibility_flags": ["nodejs_compat"],
 
+  // Generate <version>-<name>.<subdomain>.workers.dev preview URLs for
+  // non-production builds (PRs / branches), surfaced in the Git-integration
+  // PR comment. Without this the deploy succeeds but no Preview URL is shown.
+  "preview_urls": true,
+
   "observability": { "enabled": true, "head_sampling_rate": 1 },
 
   // Managed headless Chromium (Browser Run) used to render the PDF at runtime.
