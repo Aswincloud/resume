@@ -157,14 +157,22 @@ function webPage(resumeHtml: string): string {
   <style>
   @media screen {
     html { background:#e9ecf3; }
-    /* Center the A4 sheet and give it depth on desktop. */
+    /* Sticky top bar with an always-visible download button. Full viewport
+       width, so it lives outside the centered A4 sheet below it. */
+    #topbar { position:sticky; top:0; z-index:50;
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      background:#16215a; color:#fff; padding:11px 20px;
+      font-family:Arial,Helvetica,sans-serif;
+      box-shadow:0 2px 10px rgba(0,0,0,.25); }
+    #topbar .who { font-size:16px; font-weight:700; letter-spacing:.5px; }
+    #topbar .who span { color:#c9a86b; margin-left:8px; font-weight:400;
+      letter-spacing:2px; font-size:12px; text-transform:uppercase; }
+    #topbar #dl { background:#c9a86b; color:#16215a; text-decoration:none;
+      font-weight:700; font-size:14px; padding:9px 16px; border-radius:7px;
+      white-space:nowrap; }
+    #topbar #dl:hover { filter:brightness(1.05); }
+    /* Center the A4 sheet under the bar and give it depth on desktop. */
     body { margin:0 auto; max-width:210mm; box-shadow:0 6px 30px rgba(22,33,90,.18); }
-    /* Floating download button — fixed so it stays reachable while scrolling. */
-    #dl { position:fixed; right:16px; bottom:16px; z-index:50;
-      background:#c9a86b; color:#16215a; text-decoration:none; font-weight:700;
-      font-family:Arial,Helvetica,sans-serif; font-size:14px;
-      padding:11px 18px; border-radius:8px; box-shadow:0 3px 12px rgba(0,0,0,.25); }
-    #dl:hover { filter:brightness(1.05); }
   }
   /* Phones: reflow the fixed-A4 two-column grid to one readable column.
      The navy sidebar is a linear-gradient painted on <body> at the 34% split,
@@ -178,18 +186,21 @@ function webPage(resumeHtml: string): string {
     .side { width:100% !important; background:#16215a !important; }
     .main { width:100% !important; background:#fff !important; }
     .name { font-size:30px !important; }
-    #dl { left:16px; right:16px; text-align:center; }
+    #topbar .who { font-size:14px; }
+    #topbar .who span { display:none; }
   }
-  /* Belt-and-suspenders: never show the button when printing from the browser. */
-  @media print { #dl { display:none !important; } }
+  /* Belt-and-suspenders: never show the bar when printing from the browser. */
+  @media print { #topbar { display:none !important; } }
   </style>`;
 
-  const dlButton = `<a id="dl" href="/${PDF_FILENAME}?download">↓ Download PDF</a>`;
+  const topBar =
+    `<div id="topbar"><div class="who">Aswin<span>Software Engineer</span></div>` +
+    `<a id="dl" href="/${PDF_FILENAME}?download">↓ Download PDF</a></div>`;
 
   let out = resumeHtml;
   // Inject metadata + styles right after <head> (resume.html has a bare <head>).
   out = out.replace(/<head>/i, `<head>${head}`);
-  // Drop the floating button just inside <body>.
-  out = out.replace(/<body>/i, `<body>${dlButton}`);
+  // Put the sticky bar first inside <body>, above the resume sheet.
+  out = out.replace(/<body>/i, `<body>${topBar}`);
   return out;
 }
