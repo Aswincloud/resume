@@ -157,13 +157,13 @@ function webPage(resumeHtml: string): string {
   <style>
   @media screen {
     html { background:#e9ecf3; }
-    /* Sticky top bar with an always-visible download button. Full viewport
-       width, so it lives outside the centered A4 sheet below it. */
-    #topbar { position:sticky; top:0; z-index:50;
+    /* Fixed top bar (out of flow), full viewport width, always visible.
+       Its own solid navy paints over the resume body's split-gradient. */
+    #topbar { position:fixed; top:0; left:0; right:0; z-index:100;
       display:flex; align-items:center; justify-content:space-between; gap:16px;
-      background:#16215a; color:#fff; padding:11px 20px;
+      background:#16215a; color:#fff; padding:11px 20px; height:52px;
       font-family:Arial,Helvetica,sans-serif;
-      box-shadow:0 2px 10px rgba(0,0,0,.25); }
+      box-shadow:0 2px 10px rgba(0,0,0,.35); box-sizing:border-box; }
     #topbar .who { font-size:16px; font-weight:700; letter-spacing:.5px; }
     #topbar .who span { color:#c9a86b; margin-left:8px; font-weight:400;
       letter-spacing:2px; font-size:12px; text-transform:uppercase; }
@@ -171,6 +171,8 @@ function webPage(resumeHtml: string): string {
       font-weight:700; font-size:14px; padding:9px 16px; border-radius:7px;
       white-space:nowrap; }
     #topbar #dl:hover { filter:brightness(1.05); }
+    /* Push the whole page down so the fixed bar never overlaps the sheet. */
+    html { padding-top:52px; }
     /* Center the A4 sheet under the bar and give it depth on desktop. */
     body { margin:0 auto; max-width:210mm; box-shadow:0 6px 30px rgba(22,33,90,.18); }
   }
