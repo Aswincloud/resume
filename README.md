@@ -79,7 +79,3 @@ block with inline-SVG icons, skills / education / certifications in the sidebar;
 profile, an experience timeline, and projects in the main column. The sidebar
 color is a split `linear-gradient` on `body` so it extends to the page edge.
 Layout is tuned to fit a single A4 page.
-
-<!-- mq-manual-test -->
-
-<!-- auto-merge-behavior-test -->
