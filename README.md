@@ -81,3 +81,5 @@ color is a split `linear-gradient` on `body` so it extends to the page edge.
 Layout is tuned to fit a single A4 page.
 
 <!-- mq-manual-test -->
+
+<!-- auto-merge-behavior-test -->
