@@ -149,10 +149,10 @@ function webPage(resumeHtml: string): string {
   const head = `
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="data:image/svg+xml,${encodeURIComponent(FAVICON_SVG)}">
-  <title>Aswin — Software Engineer · Resume</title>
-  <meta name="description" content="Aswin — Software Engineer working on next-generation AI accelerator hardware: compute kernels, profiling, and model tracing.">
-  <meta property="og:title" content="Aswin — Software Engineer">
-  <meta property="og:description" content="Resume — AI-accelerator software engineer.">
+  <title>Aswin — Senior Software Engineer · Resume</title>
+  <meta name="description" content="Aswin — Senior Software Engineer working on next-generation AI accelerator hardware: compute kernels, profiling, and model tracing.">
+  <meta property="og:title" content="Aswin — Senior Software Engineer">
+  <meta property="og:description" content="Resume — senior AI-accelerator software engineer.">
   <meta property="og:type" content="profile">
   <style>
   @media screen {
@@ -196,7 +196,7 @@ function webPage(resumeHtml: string): string {
   </style>`;
 
   const topBar =
-    `<div id="topbar"><div class="who">Aswin<span>Software Engineer</span></div>` +
+    `<div id="topbar"><div class="who">Aswin<span>Senior Software Engineer</span></div>` +
     `<a id="dl" href="/${PDF_FILENAME}?download">↓ Download PDF</a></div>`;
 
   // Order matters: do the <body> injection on the RAW resume first, so the
