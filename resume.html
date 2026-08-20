@@ -4,141 +4,141 @@
 <meta charset="utf-8" />
 <style>
   :root{
-    --indigo:#4338ca;
-    --indigo-2:#6366f1;
-    --ink:#1e2230;
-    --muted:#5b6172;
-    --line:#e6e8f0;
-    --side-bg:#f3f4fb;
-    --sidebar:35%;
+    --ink:#1c2233;
+    --muted:#4d5573;
+    --faint:#8b93ad;
+    --accent:#7c3aed;
+    --accent-2:#ec4899;
+    --card:rgba(255,255,255,.72);
+    --line:rgba(124,58,237,.16);
   }
   *{ box-sizing:border-box; margin:0; padding:0; }
   html,body{ font-family:"Liberation Sans","Helvetica Neue",Arial,sans-serif; color:var(--ink); }
   @page{ size:A4; margin:0; }
-  body{ -webkit-print-color-adjust:exact; print-color-adjust:exact;
-    background:linear-gradient(to right, var(--side-bg) 0, var(--side-bg) var(--sidebar), #fff var(--sidebar), #fff 100%); }
-  .page{ display:grid; grid-template-columns:var(--sidebar) 1fr; min-height:280mm; }
+  body{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .page{ min-height:280mm; padding:20px 22px; background:linear-gradient(135deg,#f3e8ff 0%, #fce7f3 45%, #e0f2fe 100%); }
 
-  /* sidebar */
-  .side{ padding:30px 20px 26px; }
-  .side h2{ font-size:11.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--indigo); font-weight:800; margin:18px 0 9px; }
-  .side h2:first-child{ margin-top:0; }
-  .contact-row{ display:flex; gap:9px; align-items:center; font-size:11px; line-height:1.4; margin:7px 0; color:var(--muted); }
-  .contact-row .ic{ width:22px; height:22px; flex:0 0 22px; border-radius:6px; background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(30,34,48,.08); }
-  .contact-row .ic svg{ width:12px; height:12px; fill:var(--indigo); }
-  .contact-row a{ color:var(--muted); text-decoration:none; word-break:break-word; }
+  .glass{ background:var(--card); border:1px solid rgba(255,255,255,.8); border-radius:16px; box-shadow:0 8px 24px rgba(80,40,140,.10); }
 
-  .skill-group{ margin:9px 0; }
-  .skill-group .k{ font-size:10.5px; font-weight:800; color:var(--ink); text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
-  .tags{ display:flex; flex-wrap:wrap; gap:5px; }
-  .tag{ font-size:10px; color:var(--indigo); background:#fff; border:1px solid #dfe0f2; border-radius:999px; padding:3px 9px; }
-  .skill-group .v{ font-size:11px; color:var(--muted); line-height:1.5; }
+  .hero{ padding:22px 26px; margin-bottom:14px; position:relative; overflow:hidden; }
+  .hero::after{ content:""; position:absolute; right:-40px; top:-40px; width:180px; height:180px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-2)); opacity:.12; }
+  .hero .who{ flex:1; }
+  .hero .name{ font-size:40px; font-weight:800; letter-spacing:.5px; line-height:1; background:linear-gradient(120deg,var(--accent),var(--accent-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero .role{ font-size:12.5px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--accent); margin-top:8px; }
+  .hero .contact{ font-size:10.5px; color:var(--muted); line-height:1.7; margin-top:10px; }
+  .hero .contact a{ color:var(--muted); text-decoration:none; }
+  .hero .contact .sep{ color:var(--faint); margin:0 6px; }
 
-  .edu .d{ font-size:11.5px; font-weight:800; color:var(--ink); line-height:1.35; margin-top:9px; }
-  .edu .s{ font-size:10.8px; color:var(--muted); line-height:1.4; margin-top:2px; }
-  .cert{ font-size:10.8px; color:var(--muted); line-height:1.4; margin:6px 0; padding-left:15px; position:relative; }
-  .cert::before{ content:""; position:absolute; left:2px; top:5px; width:6px; height:6px; border-radius:50%; background:var(--indigo-2); }
+  .lead-card{ padding:14px 20px; margin-bottom:14px; }
+  .lead{ font-size:12.2px; line-height:1.58; color:var(--muted); }
 
-  /* main */
-  .main{ padding:30px 34px 24px 32px; }
-  .name{ font-size:40px; font-weight:800; color:var(--indigo); letter-spacing:.5px; line-height:1; }
-  .role{ font-size:14px; font-weight:700; color:var(--ink); letter-spacing:3px; text-transform:uppercase; margin-top:8px; }
-  .rule{ height:3px; width:60px; background:var(--indigo-2); margin:16px 0 4px; border-radius:2px; }
+  main{ display:grid; grid-template-columns:1.55fr 1fr; gap:14px; }
+  .stack-col{ display:flex; flex-direction:column; gap:14px; }
+  .sec{ padding:14px 18px; }
+  .sec-title{ font-size:12.5px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; color:var(--accent); margin-bottom:11px; display:flex; align-items:center; gap:8px; }
+  .sec-title .dot{ width:9px; height:9px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-2)); }
 
-  .sec{ margin-top:16px; }
-  .sec-title{ font-size:14px; font-weight:800; color:var(--indigo); text-transform:uppercase; letter-spacing:1.5px; display:flex; align-items:center; gap:10px; }
-  .sec-title::after{ content:""; flex:1; height:1.5px; background:var(--line); }
-  .summary{ font-size:12.2px; line-height:1.55; color:var(--muted); margin-top:8px; }
-
-  .tl{ margin-top:10px; padding-left:18px; border-left:2px solid var(--line); }
-  .job{ position:relative; margin-bottom:12px; }
-  .job::before{ content:""; position:absolute; left:-25px; top:4px; width:11px; height:11px; border-radius:50%; background:var(--indigo-2); border:2px solid #fff; box-shadow:0 0 0 1.5px var(--indigo-2); }
-  .job .h{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; }
-  .job .title{ font-size:13.5px; font-weight:800; color:var(--ink); }
-  .job .meta{ font-size:11px; color:var(--muted); font-style:italic; white-space:nowrap; }
-  .job .sub{ font-size:11.5px; color:var(--indigo); font-weight:700; margin:1px 0 6px; }
-  ul.pts{ list-style:none; }
-  ul.pts li{ font-size:11.4px; line-height:1.42; color:var(--ink); padding-left:16px; position:relative; margin:2.5px 0; }
-  ul.pts li::before{ content:""; position:absolute; left:2px; top:6px; width:5px; height:5px; border-radius:1.5px; background:var(--indigo-2); }
+  .job{ margin-bottom:12px; }
+  .job .h{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap; }
+  .job .title{ font-size:13px; font-weight:800; }
+  .job .meta{ font-size:9.5px; color:var(--accent); background:rgba(124,58,237,.10); border-radius:999px; padding:2px 9px; white-space:nowrap; font-weight:700; }
+  .job .sub{ font-size:11px; color:var(--accent-2); font-weight:700; margin:2px 0 5px; }
+  ul{ list-style:none; }
+  ul li{ font-size:11px; line-height:1.42; color:var(--muted); padding-left:14px; position:relative; margin:2.5px 0; }
+  ul li::before{ content:""; position:absolute; left:0; top:5px; width:6px; height:6px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-2)); }
 
   .proj{ margin-bottom:9px; }
-  .proj .title{ font-size:12.6px; font-weight:800; color:var(--ink); }
-  .proj .desc{ font-size:11.4px; line-height:1.45; color:var(--muted); margin-top:2px; }
-  .proj .desc .stack{ color:var(--indigo); font-weight:600; }
+  .proj .title{ font-size:11.6px; font-weight:800; }
+  .proj .desc{ font-size:10.6px; line-height:1.42; color:var(--muted); margin-top:2px; }
+  .proj .desc .stack{ color:var(--accent); font-weight:700; }
+  .proj .desc a{ color:var(--accent-2); text-decoration:none; font-weight:700; }
+
+  .skill-group{ margin:7px 0; }
+  .skill-group .k{ font-size:9.5px; font-weight:800; color:var(--ink); text-transform:uppercase; letter-spacing:.6px; margin-bottom:4px; }
+  .tags{ display:flex; flex-wrap:wrap; gap:5px; }
+  .tag{ font-size:9.5px; color:var(--accent); background:rgba(124,58,237,.09); border:1px solid var(--line); border-radius:999px; padding:2px 9px; }
+  .skill-group .v{ font-size:10.5px; color:var(--muted); line-height:1.45; }
+  .edu .d{ font-size:11.4px; font-weight:800; line-height:1.35; margin-top:7px; }
+  .edu .d:first-child{ margin-top:0; }
+  .edu .s{ font-size:10.4px; color:var(--muted); line-height:1.4; margin-top:2px; }
+  .cert{ font-size:10.4px; color:var(--muted); line-height:1.4; margin:5px 0; padding-left:15px; position:relative; }
+  .cert::before{ content:""; position:absolute; left:2px; top:4px; width:7px; height:7px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-2)); }
 </style>
 </head>
 <body>
   <div class="page">
-    <aside class="side">
-      <h2>Contact</h2>
-      <div class="contact-row"><span class="ic"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1z"/></svg></span><span>+91 7871420012</span></div>
-      <div class="contact-row"><span class="ic"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5z"/></svg></span><a href="mailto:SwethaR4@hexaware.com">SwethaR4@hexaware.com</a></div>
-      <div class="contact-row"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1112 6.5a2.5 2.5 0 010 5z"/></svg></span><span>Puducherry, India</span></div>
-      <div class="contact-row"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.9 6h-2.9a15.7 15.7 0 00-1.4-3.6A8 8 0 0118.9 8zM12 4c.8 1.2 1.4 2.5 1.8 4h-3.6c.4-1.5 1-2.8 1.8-4zM4.3 14a8 8 0 010-4h3.3a16.6 16.6 0 000 4H4.3zm.8 2h2.9c.4 1.3.8 2.5 1.4 3.6A8 8 0 015.1 16zM8 8H5.1a8 8 0 014.3-3.6C8.8 5.5 8.4 6.7 8 8zm4 12c-.8-1.2-1.4-2.5-1.8-4h3.6c-.4 1.5-1 2.8-1.8 4zm2.3-6H9.7a14.6 14.6 0 010-4h4.6a14.6 14.6 0 010 4zm.3 5.6c.6-1.1 1-2.3 1.4-3.6h2.9a8 8 0 01-4.3 3.6zM16.4 14a16.6 16.6 0 000-4h3.3a8 8 0 010 4h-3.3z"/></svg></span><span>Nationality: Indian</span></div>
-
-      <h2>Skills</h2>
-      <div class="skill-group"><div class="k">Languages</div><div class="tags"><span class="tag">Python</span><span class="tag">SQL</span></div></div>
-      <div class="skill-group"><div class="k">Tools &amp; Technologies</div><div class="tags"><span class="tag">PySpark</span><span class="tag">Azure Databricks</span><span class="tag">Microsoft Azure</span><span class="tag">Azure DevOps</span><span class="tag">MSSQL</span><span class="tag">VS Code</span><span class="tag">Google Colab</span></div></div>
-      <div class="skill-group"><div class="k">Data Engineering</div><div class="v">ETL pipelines, data warehousing, Delta Live Tables, workflow optimization, real-time processing</div></div>
-      <div class="skill-group"><div class="k">Operating Systems</div><div class="v">Windows</div></div>
-
-      <h2>Education</h2>
-      <div class="edu">
-        <div class="d">B.Tech, Electronics &amp; Communication Engineering</div>
-        <div class="s">Sri Manakula Vinayagar Engineering College, Puducherry<br/>2024</div>
-        <div class="d">Higher Secondary (12<sup>th</sup>)</div>
-        <div class="s">Amalorpavam Hr. Sec. School, Puducherry<br/>2020</div>
-        <div class="d">SSLC (10<sup>th</sup>)</div>
-        <div class="s">Immaculate Heart of Mary Girls Hr. Sec. School, Puducherry<br/>2018</div>
+    <div class="hero glass">
+      <div class="who">
+        <div class="name">SWETHA R</div>
+        <div class="role">Data Engineer</div>
+        <div class="contact">
+          +91 7871420012 <span class="sep">•</span> <a href="mailto:swethaselviraj@gmail.com">swethaselviraj@gmail.com</a> <span class="sep">•</span> Puducherry, India<br/>
+          Nationality: Indian <span class="sep">•</span> Date of Birth: 23 May 2003 <span class="sep">•</span> Languages: English, Tamil
+        </div>
       </div>
+    </div>
 
-      <h2>Certifications</h2>
-      <div class="cert">PCEP — Certified Entry-Level Python Programmer</div>
-      <div class="cert">AZ-900 — Microsoft Azure Fundamentals</div>
-      <div class="cert">Mavericks Data Engineering — Hexavarsity</div>
-    </aside>
+    <div class="lead-card glass">
+      <p class="lead">A skilled Data Engineer trained in Python, PySpark, SQL, and Azure Databricks with hands-on experience in building data pipelines and optimizing data workflows. Passionate about leveraging data engineering techniques to deliver actionable insights and support business decision-making, while continuously advancing my technical expertise and career.</p>
+    </div>
 
-    <main class="main">
-      <div class="name">SWETHA R</div>
-      <div class="role">Data Engineer</div>
-      <div class="rule"></div>
-
-      <div class="sec">
-        <div class="sec-title">Profile</div>
-        <p class="summary">A skilled Data Engineer trained in Python, PySpark, SQL, and Azure Databricks with hands-on experience in building data pipelines and optimizing data workflows. Passionate about leveraging data engineering techniques to deliver actionable insights and support business decision-making, while continuously advancing my technical expertise and career.</p>
-      </div>
-
-      <div class="sec">
-        <div class="sec-title">Experience</div>
-        <div class="tl">
+    <main>
+      <div class="stack-col">
+        <div class="sec glass">
+          <div class="sec-title"><span class="dot"></span>Experience</div>
           <div class="job">
             <div class="h"><span class="title">Data Engineer</span><span class="meta">Oct 2024 – Present</span></div>
             <div class="sub">Hexaware Technologies Ltd.</div>
-            <ul class="pts">
+            <ul>
               <li>Completed Mavericks Data Engineering training at Hexavarsity, specializing in Python, PySpark, SQL, and Azure Databricks.</li>
-              <li>Developed 2 projects utilizing PySpark and Azure Databricks, focusing on data pipelines and ETL processes.</li>
-              <li>Proficient in building cloud-based data solutions and optimizing workflows with Azure DevOps.</li>
-              <li>Applied strong problem-solving abilities and technical expertise to real-world data challenges.</li>
+              <li>Re-engineered SAS data steps and PROC transformations into PySpark and Spark SQL in Azure Synapse and Databricks, ensuring functional parity and schema consistency.</li>
+              <li>Built parameterized, modular ETL pipelines in Azure Synapse (notebooks and pipelines) integrating Azure Storage, with robust error handling, auditing, and lineage tracking.</li>
+              <li>Implemented rigorous data reconciliation — row counts, hash checks, variance thresholds, and business-rule validations — to guarantee zero data loss or mismatch.</li>
+              <li>Optimized big-data workloads via partitioning, efficient file formats (Parquet and Delta), broadcast joins, and caching to meet SLA and cost objectives in the cloud.</li>
             </ul>
+          </div>
+        </div>
+
+        <div class="sec glass">
+          <div class="sec-title"><span class="dot"></span>Projects</div>
+          <div class="proj">
+            <div class="title">Real-Time Social Media Sentiment Analysis</div>
+            <div class="desc">Processed social media data from streaming APIs and CSV files in real time for sentiment analysis and actionable insights — tracking sentiment trends, user engagement, and topic popularity. Built databases for posts and sentiment scores, cleaned data with PySpark, categorized posts as positive / negative / neutral, and built a pipeline with Delta Live Tables for real-time insights. <span class="stack">Python · MSSQL · PySpark · Azure Databricks · Google Colab</span></div>
+          </div>
+          <div class="proj">
+            <div class="title">Stock Market Data Analysis</div>
+            <div class="desc">Built a data warehouse to store and analyze stock market data — prices, trading volumes, and indicators. Designed the schema, collected and cleaned data from APIs and CSV files with Python, wrote SQL queries to detect price anomalies, and built real-time PySpark pipelines to analyze market trends and indicators such as moving averages and RSI, helping detect sudden market shifts. <span class="stack">Python · MSSQL · PySpark · Azure Databricks · Google Colab</span></div>
           </div>
         </div>
       </div>
 
-      <div class="sec">
-        <div class="sec-title">Projects</div>
-        <div class="proj">
-          <div class="title">Real-Time Social Media Sentiment Analysis</div>
-          <div class="desc">Processed social media data from streaming APIs and CSV files in real time to perform sentiment analysis and generate actionable insights — tracking sentiment trends, user engagement, and topic popularity. Developed databases for posts and sentiment scores, cleaned and processed data with PySpark, categorized posts as positive / negative / neutral, and built a data pipeline with Delta Live Tables for real-time insights. <span class="stack">Python · MSSQL · PySpark · Azure Databricks · Google Colab</span></div>
+      <div class="stack-col">
+        <div class="sec glass">
+          <div class="sec-title"><span class="dot"></span>Skills</div>
+          <div class="skill-group"><div class="k">Languages</div><div class="tags"><span class="tag">Python</span><span class="tag">SQL</span></div></div>
+          <div class="skill-group"><div class="k">Tools &amp; Tech</div><div class="tags"><span class="tag">PySpark</span><span class="tag">Azure Databricks</span><span class="tag">Azure Synapse</span><span class="tag">Azure Data Factory</span><span class="tag">Azure Data Lake</span><span class="tag">Azure DevOps</span><span class="tag">MSSQL</span><span class="tag">VS Code</span><span class="tag">Google Colab</span></div></div>
+          <div class="skill-group"><div class="k">Data Engineering</div><div class="v">ETL pipelines, data warehousing, Delta Live Tables, workflow optimization, real-time processing</div></div>
+          <div class="skill-group"><div class="k">Operating Systems</div><div class="v">Windows</div></div>
         </div>
-        <div class="proj">
-          <div class="title">Stock Market Data Analysis</div>
-          <div class="desc">Built a data warehouse to store and analyze stock market data — prices, trading volumes, and indicators. Designed the schema, collected and cleaned data from APIs and CSV files with Python, wrote SQL queries to detect price anomalies, and built real-time PySpark pipelines to analyze market trends and indicators such as moving averages and RSI, helping detect sudden market shifts. <span class="stack">Python · MSSQL · PySpark · Azure Databricks · Google Colab</span></div>
-        </div>
-      </div>
 
-      <div class="sec">
-        <div class="sec-title">Details</div>
-        <p class="summary">Date of Birth: 23 May 2003 &nbsp;•&nbsp; Nationality: Indian &nbsp;•&nbsp; Languages: English, Tamil</p>
+        <div class="sec glass">
+          <div class="sec-title"><span class="dot"></span>Education</div>
+          <div class="edu">
+            <div class="d">B.Tech, Electronics &amp; Communication Engineering</div>
+            <div class="s">Sri Manakula Vinayagar Engineering College, Puducherry &nbsp;•&nbsp; 2024</div>
+            <div class="d">Higher Secondary (12<sup>th</sup>)</div>
+            <div class="s">Amalorpavam Hr. Sec. School, Puducherry &nbsp;•&nbsp; 2020</div>
+            <div class="d">SSLC (10<sup>th</sup>)</div>
+            <div class="s">Immaculate Heart of Mary Girls Hr. Sec. School, Puducherry &nbsp;•&nbsp; 2018</div>
+          </div>
+        </div>
+
+        <div class="sec glass">
+          <div class="sec-title"><span class="dot"></span>Certifications</div>
+          <div class="cert">PCEP — Certified Entry-Level Python Programmer</div>
+          <div class="cert">AZ-900 — Microsoft Azure Fundamentals</div>
+          <div class="cert">Mavericks Data Engineering — Hexavarsity</div>
+        </div>
       </div>
     </main>
   </div>
