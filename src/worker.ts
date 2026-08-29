@@ -3,6 +3,10 @@ import puppeteer from "@cloudflare/puppeteer";
 // base64 WOFF2 fonts and photo, so Browser Run renders it identically to local.
 import RESUME_HTML from "../resume.embedded.html";
 
+const CHATWOOT_BASE_URL = "https://support.aswincloud.com";
+// aswincloud.com inbox — see the note by chatWidget below.
+const CHATWOOT_WEBSITE_TOKEN = "A2f18JGY7uLahTifqxi74Ncd";
+
 interface Env {
   BROWSER: Fetcher;
   PDF_CACHE: KVNamespace;
@@ -191,18 +195,35 @@ function webPage(resumeHtml: string): string {
     #topbar .who { font-size:14px; }
     #topbar .who span { display:none; }
   }
-  /* Belt-and-suspenders: never show the bar when printing from the browser. */
-  @media print { #topbar { display:none !important; } }
+  /* Belt-and-suspenders: never show the bar when printing from the browser.
+     Same for the support widget — it is a fixed-position overlay, so without
+     this it would print on top of the resume. (The downloadable PDF is
+     rendered from the untouched resume.html and never sees any of this.) */
+  @media print {
+    #topbar, .woot-widget-holder, .woot--bubble-holder { display:none !important; }
+  }
   </style>`;
 
   const topBar =
     `<div id="topbar"><div class="who">Aswin<span>Senior Software Engineer</span></div>` +
     `<a id="dl" href="/${PDF_FILENAME}?download">↓ Download PDF</a></div>`;
 
+  // Chatwoot support widget. It points at the aswincloud.com inbox on purpose:
+  // that inbox's knowledge is already "facts about Aswin" — background, skills,
+  // employer, contact — which is exactly what someone reading a resume asks.
+  // A separate inbox would duplicate that and add nothing the source-site
+  // label does not already give. Deferred to `defer` so it never blocks the
+  // resume painting.
+  const chatWidget =
+    `<script>window.chatwootSettings={position:"right",type:"standard",` +
+    `launcherTitle:"Ask about Aswin"};</script>` +
+    `<script defer src="${CHATWOOT_BASE_URL}/packs/js/sdk.js" onload=` +
+    `'window.chatwootSDK.run({websiteToken:"${CHATWOOT_WEBSITE_TOKEN}",baseUrl:"${CHATWOOT_BASE_URL}"})'></script>`;
+
   // Order matters: do the <body> injection on the RAW resume first, so the
   // regex can only match the real body tag — not a literal "<body>" that
   // appears inside a CSS comment in the head we inject below.
-  let out = resumeHtml.replace(/<body>/i, `<body>${topBar}`);
+  let out = resumeHtml.replace(/<body>/i, `<body>${topBar}${chatWidget}`);
   // Then inject metadata + styles right after <head> (resume.html has a bare <head>).
   out = out.replace(/<head>/i, `<head>${head}`);
   return out;
