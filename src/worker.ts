@@ -1,4 +1,4 @@
-import puppeteer from "@cloudflare/puppeteer";
+import puppeteer, { type Browser, type Page } from "@cloudflare/puppeteer";
 // Generated at build time by scripts/embed.mjs: every theme's raw HTML plus a
 // single copy of the base64 fonts and photo, which are spliced into a theme
 // right before it is served or rendered (see themeHtml).
@@ -74,10 +74,47 @@ function contentHash(t: EmbeddedTheme): Promise<string> {
   return p;
 }
 
-async function renderPdf(env: Env, t: EmbeddedTheme): Promise<Uint8Array> {
-  const browser = await puppeteer.launch(env.BROWSER);
+// How long an idle Browser Run session stays alive after we disconnect from
+// it, so the next render can reattach instead of launching a fresh browser.
+const BROWSER_KEEP_ALIVE_MS = 10 * 60 * 1000;
+const LAUNCH_RETRY_DELAYS_MS = [0, 1500, 3000];
+
+// Browser Run caps how many *new* browsers an account may start per minute,
+// and with twenty-one themes a visitor clicking through the gallery hits that
+// cap on the second uncached PDF — the launch fails within half a second. So:
+// reattach to an idle session we kept alive earlier, and only launch when
+// there is none, retrying briefly if the launch is refused.
+async function acquireBrowser(env: Env): Promise<Browser> {
   try {
-    const page = await browser.newPage();
+    for (const s of await puppeteer.sessions(env.BROWSER)) {
+      if (s.connectionId) continue; // another request is using it
+      try {
+        return await puppeteer.connect(env.BROWSER, s.sessionId);
+      } catch {
+        // Session may have just expired or been claimed; try the next one.
+      }
+    }
+  } catch {
+    // sessions() itself failing is not fatal — fall through to launch.
+  }
+
+  let lastErr: unknown;
+  for (const delay of LAUNCH_RETRY_DELAYS_MS) {
+    if (delay) await new Promise((r) => setTimeout(r, delay));
+    try {
+      return await puppeteer.launch(env.BROWSER, { keep_alive: BROWSER_KEEP_ALIVE_MS });
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw lastErr;
+}
+
+async function renderPdf(env: Env, t: EmbeddedTheme): Promise<Uint8Array> {
+  const browser = await acquireBrowser(env);
+  let page: Page | undefined;
+  try {
+    page = await browser.newPage();
     // networkidle0 lets inline data: URLs — and the Google Fonts @import some
     // themes use — settle before printing.
     await page.setContent(themeHtml(t), { waitUntil: "networkidle0" });
@@ -87,7 +124,10 @@ async function renderPdf(env: Env, t: EmbeddedTheme): Promise<Uint8Array> {
     });
     return pdf;
   } finally {
-    await browser.close();
+    // Close our tab but keep the browser: disconnect() leaves the session
+    // running for keep_alive so the next render can reuse it.
+    await page?.close().catch(() => undefined);
+    await browser.disconnect().catch(() => undefined);
   }
 }
 
@@ -178,7 +218,10 @@ export default {
     try {
       ({ pdf, hash } = await getPdf(env, ctx, r.theme));
     } catch (err) {
-      console.log(JSON.stringify({ msg: "pdf render failed", theme: r.theme.id, err: String(err) }));
+      // Include the account's Browser Run limits so a refused launch is
+      // diagnosable from the log alone.
+      const limits = await puppeteer.limits(env.BROWSER).catch(() => undefined);
+      console.log(JSON.stringify({ msg: "pdf render failed", theme: r.theme.id, err: String(err), limits }));
       return new Response("Failed to render PDF.", { status: 502 });
     }
 
