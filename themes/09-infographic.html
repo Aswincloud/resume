@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="theme-name" content="Infographic / Metrics">
+<meta name="theme-description" content="Dark left rail with circular photo, skill-strength bars and tag clusters; icon-marked timeline and card projects on the right.">
+<meta charset="utf-8" />
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#475569;
+    --faint:#94a3b8;
+    --line:#e2e8f0;
+    --accent:#0ea5e9;
+    --accent-d:#0369a1;
+    --track:#e6eef5;
+    --sidebg:#0f172a;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ font-family:"Liberation Sans","Helvetica Neue",Arial,sans-serif; color:var(--ink); background:#fff; }
+  @page{ size:A4; margin:0; }
+  body{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .page{ min-height:280mm; display:grid; grid-template-columns:34% 1fr; }
+
+  /* left dark rail */
+  .rail{ background:var(--sidebg); color:#e2e8f0; padding:26px 20px; }
+  .rail .photo{ width:118px; height:118px; border-radius:50%; object-fit:cover; object-position:center 20%; display:block; margin:0 auto 14px; border:3px solid rgba(255,255,255,.18); }
+  .rail .name{ font-size:30px; font-weight:800; letter-spacing:1px; text-align:center; line-height:1; }
+  .rail .role{ font-size:10.5px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--accent); text-align:center; margin-top:7px; }
+  .rail h3{ font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:#fff; margin:18px 0 9px; padding-bottom:5px; border-bottom:1px solid rgba(255,255,255,.15); }
+  .rail .contact{ font-size:10px; line-height:1.75; color:#cbd5e1; }
+  .rail .contact a{ color:#cbd5e1; text-decoration:none; }
+  .rail .contact div{ margin:3px 0; }
+
+  /* skill bars */
+  .bar{ margin:7px 0; }
+  .bar .lbl{ display:flex; justify-content:space-between; font-size:10px; color:#e2e8f0; margin-bottom:3px; }
+  .bar .track{ height:6px; background:rgba(255,255,255,.12); border-radius:999px; overflow:hidden; }
+  .bar .fill{ height:100%; background:linear-gradient(90deg,var(--accent),#38bdf8); border-radius:999px; }
+  .tags{ display:flex; flex-wrap:wrap; gap:5px; margin-top:5px; }
+  .tag{ font-size:9.5px; color:#e2e8f0; background:rgba(255,255,255,.10); border-radius:999px; padding:2px 8px; }
+  .rail .v{ font-size:10px; color:#cbd5e1; line-height:1.5; margin-top:4px; }
+
+  /* right main */
+  .main{ padding:26px 26px 22px; }
+  .lead{ font-size:12.2px; line-height:1.58; color:var(--muted); border-left:3px solid var(--accent); padding-left:12px; margin-bottom:16px; }
+  h2{ font-size:13px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; color:var(--accent-d); margin-bottom:11px; display:flex; align-items:center; gap:9px; }
+  h2 .ic{ width:20px; height:20px; border-radius:6px; background:var(--track); display:inline-flex; align-items:center; justify-content:center; color:var(--accent-d); font-size:11px; font-weight:800; }
+
+  .tl{ padding-left:18px; border-left:2px solid var(--line); margin-bottom:14px; }
+  .job{ position:relative; margin-bottom:12px; }
+  .job::before{ content:""; position:absolute; left:-25px; top:3px; width:12px; height:12px; border-radius:50%; background:#fff; border:3px solid var(--accent); }
+  .job .h{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap; }
+  .job .title{ font-size:13px; font-weight:800; }
+  .job .meta{ font-size:9.5px; color:#fff; background:var(--accent); border-radius:999px; padding:2px 9px; white-space:nowrap; font-weight:700; }
+  .job .sub{ font-size:11px; color:var(--accent-d); font-weight:700; margin:2px 0 5px; }
+  ul{ list-style:none; }
+  ul li{ font-size:11px; line-height:1.42; color:var(--muted); padding-left:14px; position:relative; margin:2.5px 0; }
+  ul li::before{ content:""; position:absolute; left:0; top:5px; width:6px; height:6px; border-radius:50%; background:var(--accent); }
+
+  .proj{ margin-bottom:8px; padding:8px 11px; background:#f8fafc; border-radius:8px; border-left:3px solid var(--accent); }
+  .proj .title{ font-size:11.6px; font-weight:800; }
+  .proj .desc{ font-size:10.5px; line-height:1.42; color:var(--muted); margin-top:2px; }
+  .proj .desc .stack{ color:var(--accent-d); font-weight:700; }
+  .proj .desc a{ color:var(--accent-d); text-decoration:none; font-weight:700; }
+
+  .edu .d{ font-size:11.6px; font-weight:800; }
+  .edu .s{ font-size:10.6px; color:var(--muted); line-height:1.4; margin-top:2px; }
+  .certrow{ display:grid; grid-template-columns:1fr 1fr; gap:5px 16px; margin-top:4px; }
+  .cert{ font-size:10.4px; color:var(--muted); line-height:1.35; padding-left:13px; position:relative; }
+  .cert::before{ content:""; position:absolute; left:0; top:4px; width:6px; height:6px; border-radius:50%; background:var(--accent); }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="rail">
+      <img class="photo" src="photo.jpg" alt="Aswin" />
+      <div class="name">ASWIN</div>
+      <div class="role">Senior Software Engineer</div>
+
+      <h3>Contact</h3>
+      <div class="contact">
+        <div>+91 6380157944</div>
+        <div><a href="mailto:aswin@aswincloud.com">aswin@aswincloud.com</a></div>
+        <div>Pondicherry, India</div>
+        <div><a href="https://www.aswincloud.com">aswincloud.com</a></div>
+        <div><a href="https://github.com/Aswincloud">github.com/Aswincloud</a></div>
+        <div><a href="https://linkedin.com/in/aswin4122001">linkedin.com/in/aswin4122001</a></div>
+      </div>
+
+      <h3>Core Skills</h3>
+      <div class="bar"><div class="lbl"><span>Kernel optimization</span></div><div class="track"><div class="fill" style="width:92%"></div></div></div>
+      <div class="bar"><div class="lbl"><span>Profiling &amp; benchmarking</span></div><div class="track"><div class="fill" style="width:90%"></div></div></div>
+      <div class="bar"><div class="lbl"><span>Python</span></div><div class="track"><div class="fill" style="width:93%"></div></div></div>
+      <div class="bar"><div class="lbl"><span>C / C++</span></div><div class="track"><div class="fill" style="width:85%"></div></div></div>
+      <div class="bar"><div class="lbl"><span>Bottleneck analysis</span></div><div class="track"><div class="fill" style="width:88%"></div></div></div>
+
+      <h3>Languages</h3>
+      <div class="tags"><span class="tag">Python</span><span class="tag">C++</span><span class="tag">C</span><span class="tag">Java</span><span class="tag">SQL</span></div>
+
+      <h3>Tooling</h3>
+      <div class="tags"><span class="tag">Git</span><span class="tag">GitHub Actions</span><span class="tag">pytest</span><span class="tag">PyPI</span><span class="tag">profilers</span></div>
+
+      <h3>Cloud &amp; Other</h3>
+      <div class="v">Cloudflare — hosting, Tunnels, Zero Trust / Access; self-hosted services. PCB design, Linux &amp; shell scripting.</div>
+    </div>
+
+    <div class="main">
+      <p class="lead">Software engineer working close to the metal on next-generation AI accelerator hardware. I build and optimize low-level compute kernels, profile and benchmark tensor operations, and hunt bottlenecks across the stack to drive device throughput — and own end-to-end model tracing and validation plus the tooling and infrastructure around it.</p>
+
+      <h2><span class="ic">◆</span>Experience</h2>
+      <div class="tl">
+        <div class="job">
+          <div class="h"><span class="title">Software Engineer</span><span class="meta">Jun 2023 – Present</span></div>
+          <div class="sub">MulticoreWare Pvt Ltd · Chennai, India</div>
+          <ul>
+            <li>Software engineering for a leading AI silicon company’s accelerator stack — developing and optimizing the software that runs on next-generation AI chips.</li>
+            <li>Work as part of an element-wise operations team — contributing kernel development, code review, and CI health for unary/binary element-wise ops.</li>
+            <li>Author and optimize low-level compute kernels with broad data-type coverage (fp32, bf16, int32, uint8/16/32) and hardware-specific instruction-level work verified against ISA documentation.</li>
+            <li>Own end-to-end model tracing and validation with sweeps — reconstructing real model operation traces from a database and validating them against generated sweep tests for exact-match coverage.</li>
+            <li>Profile and benchmark kernels with the device profiler, tracking kernel execution time and diagnosing per-core load imbalance to guide optimization.</li>
+            <li>Maintain performance-tracking automation and daily/weekly reporting pipelines that flag regressions against historical baselines and correlate them to commits.</li>
+          </ul>
+        </div>
+        <div class="job">
+          <div class="h"><span class="title">Industrial Project Engineer</span><span class="meta">Jun 2022 – May 2023</span></div>
+          <div class="sub">Lenovo Pvt Ltd · Pondicherry, India</div>
+          <ul>
+            <li>Developed and maintained a smart attendance system using face-recognition technology with database integration.</li>
+            <li>Built an ESD tester with database-backed logging for real-time test workflows.</li>
+            <li>Worked on computer-vision algorithms, biometric authentication, and real-time data processing.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2><span class="ic">▸</span>Projects</h2>
+      <div class="proj">
+        <div class="title">ttperf — AI-Accelerator Performance Profiler</div>
+        <div class="desc">CLI tool that profiles AI-accelerator compute tests and extracts device kernel performance metrics. Wraps the device profiler with pytest, parses result CSVs, and reports total kernel duration. Published on PyPI. <span class="stack">Python · pytest · PyPI</span> — <a href="https://ttperf.aswincloud.com">ttperf.aswincloud.com</a></div>
+      </div>
+      <div class="proj">
+        <div class="title">Eltwise Performance Tracker</div>
+        <div class="desc">Day-by-day performance monitoring for element-wise operations on AI-accelerator hardware — tracks kernel-timing trends across dates, correlates regressions to git commits, and sends automated alerts on &gt;20% changes. <a href="https://ttnn-eltwise-performance.aswincloud.com">ttnn-eltwise-performance.aswincloud.com</a></div>
+      </div>
+      <div class="proj">
+        <div class="title">Academic Projects — B.Tech ECE</div>
+        <div class="desc">Embedded &amp; hardware builds: DDS-based portable function generator (up to 12&nbsp;MHz), Arduino-based portable oscilloscope, 0–30&nbsp;V / 0–2&nbsp;A regulated power supply, and a non-contact AC/DC line tester.</div>
+      </div>
+
+      <h2 style="margin-top:14px;"><span class="ic">✦</span>Education &amp; Certifications</h2>
+      <div class="edu"><div class="d">B.Tech, Electronics &amp; Communication Engineering</div><div class="s">Sri Manakula Vinayagar Engineering College, Puducherry &nbsp;•&nbsp; 2019 – 2023 &nbsp;•&nbsp; CGPA 8.5 / 10</div></div>
+      <div class="certrow">
+        <div class="cert">SkillRack — 300+ medals in C &amp; Java</div>
+        <div class="cert">Python for Data Science — NPTEL</div>
+        <div class="cert">Great Learning — C, Java, OS &amp; Memory</div>
+        <div class="cert">TCS iON — Career Edge</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
