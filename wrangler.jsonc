@@ -10,8 +10,8 @@
   // PR comment. Without this the deploy succeeds but no Preview URL is shown.
   "preview_urls": true,
 
-  // Generate the self-contained resume.embedded.html (inline fonts + photo)
-  // before bundling. Put here (not just npm predeploy hooks) so it runs no
+  // Generate themes.embedded.json (every theme + fonts + photo) before
+  // bundling. Put here (not just npm predeploy hooks) so it runs no
   // matter which wrangler command CI invokes — `deploy` (production) or
   // `versions upload` (non-production / preview builds).
   "build": { "command": "npm run embed" },
@@ -21,16 +21,13 @@
   // Managed headless Chromium (Browser Run) used to render the PDF at runtime.
   "browser": { "binding": "BROWSER" },
 
-  // Caches the rendered PDF keyed by a hash of the HTML, so we render once per
-  // resume version and serve from KV thereafter. Editing resume.html changes
-  // the bundled HTML -> new hash -> automatic re-render on next request.
+  // Caches rendered PDFs keyed by a hash of each theme's HTML, so we render
+  // once per theme version and serve from KV thereafter. Editing a theme
+  // changes its bundled HTML -> new hash -> automatic re-render on next request.
   "kv_namespaces": [
     { "binding": "PDF_CACHE", "id": "d3abad4f96f34fd6a30897a56df45793" }
   ],
 
-  // resume.embedded.html (self-contained: inline fonts + photo) is bundled as a
-  // text module via the rule below and imported in the Worker.
-  "rules": [
-    { "type": "Text", "globs": ["**/*.html"], "fallthrough": true }
-  ]
+  // themes.embedded.json is imported by the Worker as a JSON module, which
+  // wrangler's bundler supports natively — no custom module rule needed.
 }
