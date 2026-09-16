@@ -9,5 +9,6 @@ node_modules/
 .wrangler/
 worker-configuration.d.ts
 
-# Generated self-contained resume (rebuilt by scripts/embed.mjs on every build)
+# Generated theme bundle (rebuilt by scripts/embed.mjs on every build)
+themes.embedded.json
 resume.embedded.html
