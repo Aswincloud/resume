@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head>
+<meta name="theme-name" content="Mono Grid">
+<meta name="theme-description" content="Neubrutalism-lite: Space Mono and Space Grotesk, bold black borders, drop-shadow accent box."><meta charset="utf-8">
+<style>@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:210mm}
+body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.sheet{width:210mm;min-height:297mm;margin:0 auto;position:relative;overflow:hidden}
+@page{size:A4;margin:0}
+body{font-family:'Space Grotesk','Liberation Sans',sans-serif;color:#111;background:#e8e6df}
+.sheet{background:#f7f5ef;padding:24mm 22mm}
+.head{border:3px solid #111;padding:20px 22px;background:#ffe94d;box-shadow:8px 8px 0 #111;margin-bottom:24px}
+.name{font-family:'Space Mono',monospace;font-size:40px;font-weight:700;letter-spacing:-1px;line-height:1}
+.role{font-size:14px;font-weight:500;margin-top:6px;text-transform:uppercase;letter-spacing:2px}
+.contacts{font-family:'Space Mono',monospace;display:flex;flex-wrap:wrap;gap:4px 18px;font-size:11.5px;margin-top:12px}
+.contacts a{color:#111;text-decoration:none}
+h2{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:#111;color:#ffe94d;display:inline-block;padding:4px 10px;margin:22px 0 12px}
+.summary{font-size:13px;line-height:1.6;border:3px solid #111;padding:14px 16px;background:#fff}
+.job{border-left:3px solid #111;padding-left:14px;margin-bottom:16px}
+.jt{font-weight:700;font-size:15px}
+.jm{font-family:'Space Mono',monospace;font-size:11.5px;color:#c2410c;margin:2px 0 7px}
+ul{margin-left:18px}
+li{font-size:12.5px;line-height:1.5;margin-bottom:4px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:0 30px}
+.proj{border:2px solid #111;padding:12px 14px;margin-bottom:12px;background:#fff}
+.pt{font-weight:700;font-size:13px}
+.pd{font-size:12px;line-height:1.45;margin-top:3px}
+.pl{font-family:'Space Mono',monospace;font-size:11px;color:#c2410c;text-decoration:none;display:inline-block;margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.sk{margin-bottom:10px;font-size:12px;line-height:1.4}
+.sk b{font-family:'Space Mono',monospace}
+.edu{font-size:12px;line-height:1.5}
+.certs li{margin-bottom:4px;font-size:12px}
+</style></head><body><div class="sheet">
+<div class="head"><div class="name">ASWIN</div><div class="role">Senior Software Engineer</div>
+<div class="contacts"><span>+91 6380157944</span><a href="mailto:aswin@aswincloud.com">aswin@aswincloud.com</a><a href="https://www.aswincloud.com">www.aswincloud.com</a><span>Pondicherry, India</span><a href="https://github.com/Aswincloud">github.com/Aswincloud</a><a href="https://linkedin.com/in/aswin4122001">linkedin.com/in/aswin4122001</a></div></div>
+<h2>// summary</h2><div class="summary">Senior software engineer working close to the metal on next-generation AI accelerator hardware. I build and optimize low-level compute kernels, profile and benchmark tensor operations, and hunt bottlenecks across the stack to drive device throughput — and own end-to-end model tracing and validation plus the tooling and infrastructure around it.</div>
+<h2>// experience</h2>
+    <div class="job"><div class="jt">Senior Software Engineer</div><div class="jm">MulticoreWare Pvt Ltd · Chennai, India // Jun 2023 – Present</div>
+    <ul><li>Software engineering for a leading AI silicon company's accelerator stack — developing and optimizing the software that runs on next-generation AI chips.</li><li>Work as part of an element-wise operations team — contributing kernel development, code review, and CI health for unary/binary element-wise ops.</li><li>Author and optimize low-level compute kernels with broad data-type coverage (fp32, bf16, int32, uint8/16/32) and hardware-specific instruction-level work verified against ISA documentation.</li><li>Own end-to-end model tracing and validation with sweeps — reconstructing real model operation traces from a database and validating them against generated sweep tests for exact-match coverage.</li><li>Profile and benchmark kernels with the device profiler, tracking kernel execution time and diagnosing per-core load imbalance to guide optimization.</li><li>Maintain performance-tracking automation and daily/weekly reporting pipelines that flag regressions against historical baselines and correlate them to commits.</li></ul></div>
+    <div class="job"><div class="jt">Industrial Project Engineer</div><div class="jm">Lenovo Pvt Ltd · Pondicherry, India // Jun 2022 – May 2023</div>
+    <ul><li>Developed and maintained a smart attendance system using face-recognition technology with database integration.</li><li>Built an ESD tester with database-backed logging for real-time test workflows.</li><li>Worked on computer-vision algorithms, biometric authentication, and real-time data processing.</li></ul></div>
+<div class="cols"><div><h2>// projects</h2><div class="proj"><div class="pt">ttperf — AI-Accelerator Performance Profiler</div><div class="pd">CLI tool that profiles AI-accelerator compute tests and extracts device kernel performance metrics. Wraps the device profiler with pytest, parses result CSVs, and reports total kernel duration. Published on PyPI.</div><a class="pl" href="https://ttperf.aswincloud.com">→ ttperf.aswincloud.com</a></div><div class="proj"><div class="pt">Eltwise Performance Tracker</div><div class="pd">Day-by-day performance monitoring for element-wise operations on AI-accelerator hardware — tracks kernel-timing trends across dates, correlates regressions to git commits, and sends automated alerts on >20% changes.</div><a class="pl" href="https://ttnn-eltwise-performance.aswincloud.com">→ ttnn-eltwise-performance.aswincloud.com</a></div><div class="proj"><div class="pt">Academic Projects — B.Tech ECE</div><div class="pd">Embedded & hardware builds: DDS-based portable function generator (up to 12 MHz), Arduino-based portable oscilloscope, 0–30 V / 0–2 A regulated power supply, and a non-contact AC/DC line tester.</div></div></div>
+<div><h2>// skills</h2><div class="sk"><b>Performance</b><br>Profiling, benchmarking, kernel optimization, bottleneck analysis, low-level compute kernels</div><div class="sk"><b>Languages</b><br>Python, C++, C, Java, SQL</div><div class="sk"><b>AI Hardware</b><br>AI-accelerator software stacks, compute-kernel development</div><div class="sk"><b>Tooling</b><br>Git & GitHub, CI/CD (GitHub Actions), pytest, PyPI, device/kernel profilers</div><div class="sk"><b>Cloud / Infra</b><br>Cloudflare — site hosting, Tunnels, Zero Trust / Access auth; self-hosted services</div><div class="sk"><b>Other</b><br>PCB design, Linux & shell scripting</div>
+<h2>// education</h2><div class="edu"><b>B.Tech, Electronics & Communication Engineering</b><br>Sri Manakula Vinayagar Engineering College, Puducherry<br>2019 – 2023 &nbsp;•&nbsp; CGPA 8.5 / 10</div>
+<h2>// certs</h2><ul class="certs" style="margin-left:18px"><li>SkillRack — 300+ problem-solving medals in C & Java</li><li>Python for Data Science — NPTEL</li><li>Great Learning — C, Java, OS & Memory Management</li><li>TCS iON — Career Edge</li></ul></div></div>
+</div></body></html>
