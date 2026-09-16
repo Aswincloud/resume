@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="theme-name" content="Slate Right Sidebar">
+<meta name="theme-description" content="Warm paper main column with amber accents and diamond bullets, paired with a dark slate right sidebar.">
+<meta charset="utf-8" />
+<style>
+  :root{
+    --ink:#26221c;
+    --muted:#5b544a;
+    --faint:#9a9184;
+    --line:#e7e2d8;
+    --slate:#2b2f36;
+    --slate-2:#3a3f47;
+    --amber:#d99a2b;
+    --amber-d:#a9741a;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ font-family:"Liberation Sans","Helvetica Neue",Arial,sans-serif; color:var(--ink); background:#fff; }
+  @page{ size:A4; margin:0; }
+  body{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .page{ min-height:280mm; display:grid; grid-template-columns:1fr 33%; }
+
+  /* left content */
+  .main{ padding:28px 26px 22px; }
+  .name{ font-size:44px; font-weight:800; letter-spacing:-.5px; line-height:.95; }
+  .name span{ color:var(--amber-d); }
+  .role{ font-size:12.5px; font-weight:700; letter-spacing:4px; text-transform:uppercase; color:var(--muted); margin-top:9px; }
+  .rule-amber{ width:52px; height:3px; background:var(--amber); margin:14px 0 16px; }
+  .lead{ font-size:12.3px; line-height:1.6; color:var(--muted); }
+
+  h2{ font-size:12.5px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--ink); margin:18px 0 11px; display:flex; align-items:center; gap:10px; }
+  h2::before{ content:""; width:16px; height:16px; border:3px solid var(--amber); border-radius:50%; }
+
+  .job{ margin-bottom:13px; }
+  .job .h{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+  .job .title{ font-size:13px; font-weight:800; }
+  .job .meta{ font-size:10px; color:var(--amber-d); white-space:nowrap; font-weight:700; }
+  .job .sub{ font-size:11px; color:var(--muted); font-weight:700; margin:2px 0 5px; }
+  ul{ list-style:none; }
+  ul li{ font-size:11px; line-height:1.42; color:var(--muted); padding-left:15px; position:relative; margin:2.5px 0; }
+  ul li::before{ content:""; position:absolute; left:1px; top:6px; width:6px; height:6px; background:var(--amber); transform:rotate(45deg); }
+
+  .proj{ margin-bottom:9px; }
+  .proj .title{ font-size:11.6px; font-weight:800; }
+  .proj .desc{ font-size:10.6px; line-height:1.42; color:var(--muted); margin-top:2px; }
+  .proj .desc .stack{ color:var(--amber-d); font-weight:700; }
+  .proj .desc a{ color:var(--ink); text-decoration:none; font-weight:700; border-bottom:1px solid var(--amber); }
+
+  /* right slate sidebar */
+  .side{ background:var(--slate); color:#e8e6e1; padding:28px 20px; }
+  .side .photo{ width:120px; height:120px; border-radius:12px; object-fit:cover; object-position:center 20%; display:block; margin:0 auto 16px; border:2px solid var(--amber); }
+  .side h3{ font-size:11px; font-weight:800; letter-spacing:1.8px; text-transform:uppercase; color:var(--amber); margin:16px 0 9px; }
+  .side h3:first-of-type{ margin-top:0; }
+  .side .contact{ font-size:10px; line-height:1.7; color:#cfccc4; }
+  .side .contact a{ color:#cfccc4; text-decoration:none; }
+  .side .contact div{ margin:3px 0; }
+  .skill-group{ margin-bottom:9px; }
+  .skill-group .k{ font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:#fff; margin-bottom:3px; }
+  .skill-group .v{ font-size:10px; color:#cfccc4; line-height:1.5; }
+  .tags{ display:flex; flex-wrap:wrap; gap:4px; }
+  .tag{ font-size:9px; color:#f0e3cb; background:var(--slate-2); border:1px solid rgba(217,154,43,.4); border-radius:4px; padding:2px 7px; }
+  .edu .d{ font-size:11px; font-weight:800; color:#fff; line-height:1.35; }
+  .edu .s{ font-size:9.8px; color:#cfccc4; line-height:1.4; margin-top:2px; }
+  .cert{ font-size:9.8px; color:#cfccc4; line-height:1.4; margin:4px 0; padding-left:12px; position:relative; }
+  .cert::before{ content:""; position:absolute; left:0; top:4px; width:5px; height:5px; background:var(--amber); transform:rotate(45deg); }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="main">
+      <div class="name">ASWIN</div>
+      <div class="role">Senior Software Engineer</div>
+      <div class="rule-amber"></div>
+      <p class="lead">Software engineer working close to the metal on next-generation AI accelerator hardware. I build and optimize low-level compute kernels, profile and benchmark tensor operations, and hunt bottlenecks across the stack to drive device throughput — and own end-to-end model tracing and validation plus the tooling and infrastructure around it.</p>
+
+      <h2>Experience</h2>
+      <div class="job">
+        <div class="h"><span class="title">Software Engineer</span><span class="meta">Jun 2023 – Present</span></div>
+        <div class="sub">MulticoreWare Pvt Ltd · Chennai, India</div>
+        <ul>
+          <li>Software engineering for a leading AI silicon company’s accelerator stack — developing and optimizing the software that runs on next-generation AI chips.</li>
+          <li>Work as part of an element-wise operations team — contributing kernel development, code review, and CI health for unary/binary element-wise ops.</li>
+          <li>Author and optimize low-level compute kernels with broad data-type coverage (fp32, bf16, int32, uint8/16/32) and hardware-specific instruction-level work verified against ISA documentation.</li>
+          <li>Own end-to-end model tracing and validation with sweeps — reconstructing real model operation traces from a database and validating them against generated sweep tests for exact-match coverage.</li>
+          <li>Profile and benchmark kernels with the device profiler, tracking kernel execution time and diagnosing per-core load imbalance to guide optimization.</li>
+          <li>Maintain performance-tracking automation and daily/weekly reporting pipelines that flag regressions against historical baselines and correlate them to commits.</li>
+        </ul>
+      </div>
+      <div class="job">
+        <div class="h"><span class="title">Industrial Project Engineer</span><span class="meta">Jun 2022 – May 2023</span></div>
+        <div class="sub">Lenovo Pvt Ltd · Pondicherry, India</div>
+        <ul>
+          <li>Developed and maintained a smart attendance system using face-recognition technology with database integration.</li>
+          <li>Built an ESD tester with database-backed logging for real-time test workflows.</li>
+          <li>Worked on computer-vision algorithms, biometric authentication, and real-time data processing.</li>
+        </ul>
+      </div>
+
+      <h2>Projects</h2>
+      <div class="proj">
+        <div class="title">ttperf — AI-Accelerator Performance Profiler</div>
+        <div class="desc">CLI tool that profiles AI-accelerator compute tests and extracts device kernel performance metrics. Wraps the device profiler with pytest, parses result CSVs, and reports total kernel duration. Published on PyPI. <span class="stack">Python · pytest · PyPI</span> — <a href="https://ttperf.aswincloud.com">ttperf.aswincloud.com</a></div>
+      </div>
+      <div class="proj">
+        <div class="title">Eltwise Performance Tracker</div>
+        <div class="desc">Day-by-day performance monitoring for element-wise operations on AI-accelerator hardware — tracks kernel-timing trends across dates, correlates regressions to git commits, and sends automated alerts on &gt;20% changes. <a href="https://ttnn-eltwise-performance.aswincloud.com">ttnn-eltwise-performance.aswincloud.com</a></div>
+      </div>
+      <div class="proj">
+        <div class="title">Academic Projects — B.Tech ECE</div>
+        <div class="desc">Embedded &amp; hardware builds: DDS-based portable function generator (up to 12&nbsp;MHz), Arduino-based portable oscilloscope, 0–30&nbsp;V / 0–2&nbsp;A regulated power supply, and a non-contact AC/DC line tester.</div>
+      </div>
+    </div>
+
+    <div class="side">
+      <img class="photo" src="photo.jpg" alt="Aswin" />
+      <h3>Contact</h3>
+      <div class="contact">
+        <div>+91 6380157944</div>
+        <div><a href="mailto:aswin@aswincloud.com">aswin@aswincloud.com</a></div>
+        <div>Pondicherry, India</div>
+        <div><a href="https://www.aswincloud.com">aswincloud.com</a></div>
+        <div><a href="https://github.com/Aswincloud">github.com/Aswincloud</a></div>
+        <div><a href="https://linkedin.com/in/aswin4122001">linkedin.com/in/aswin4122001</a></div>
+      </div>
+
+      <h3>Skills</h3>
+      <div class="skill-group"><div class="k">Performance</div><div class="v">Profiling, benchmarking, kernel optimization, bottleneck analysis, low-level compute kernels</div></div>
+      <div class="skill-group"><div class="k">Languages</div><div class="tags"><span class="tag">Python</span><span class="tag">C++</span><span class="tag">C</span><span class="tag">Java</span><span class="tag">SQL</span></div></div>
+      <div class="skill-group"><div class="k">AI Hardware</div><div class="v">AI-accelerator software stacks, compute-kernel development</div></div>
+      <div class="skill-group"><div class="k">Tooling</div><div class="tags"><span class="tag">Git</span><span class="tag">GitHub Actions</span><span class="tag">pytest</span><span class="tag">PyPI</span><span class="tag">profilers</span></div></div>
+      <div class="skill-group"><div class="k">Cloud / Infra</div><div class="v">Cloudflare — hosting, Tunnels, Zero Trust / Access; self-hosted services</div></div>
+      <div class="skill-group"><div class="k">Other</div><div class="v">PCB design, Linux &amp; shell scripting</div></div>
+
+      <h3>Education</h3>
+      <div class="edu"><div class="d">B.Tech, Electronics &amp; Communication Engineering</div><div class="s">Sri Manakula Vinayagar Engineering College, Puducherry<br/>2019 – 2023 &nbsp;•&nbsp; CGPA 8.5 / 10</div></div>
+
+      <h3>Certifications</h3>
+      <div class="cert">SkillRack — 300+ medals in C &amp; Java</div>
+      <div class="cert">Python for Data Science — NPTEL</div>
+      <div class="cert">Great Learning — C, Java, OS &amp; Memory Management</div>
+      <div class="cert">TCS iON — Career Edge</div>
+    </div>
+  </div>
+</body>
+</html>
