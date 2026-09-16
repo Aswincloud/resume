@@ -1,4 +1,4 @@
-import puppeteer from "@cloudflare/puppeteer";
+import puppeteer, { type Browser } from "@cloudflare/puppeteer";
 // Generated at build time by scripts/embed.mjs: every theme's raw HTML plus a
 // single copy of the base64 fonts and photo, which are spliced into a theme
 // right before it is served or rendered (see themeHtml).
@@ -74,8 +74,66 @@ function contentHash(t: EmbeddedTheme): Promise<string> {
   return p;
 }
 
+// Upper bound on how long a request waits for Browser Run to allow a launch.
+// Workers Free permits one new browser every 20 seconds, so this covers one
+// full cycle: a visitor who opens a second PDF right after the first waits
+// for the next slot instead of getting an error.
+const LAUNCH_WAIT_MAX_MS = 25_000;
+const LAUNCH_POLL_MS = 1_000;
+
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+// Thrown when Browser Run will not give us a browser right now. `retryAfter`
+// is a hint in seconds for the client.
+class BrowserUnavailable extends Error {
+  constructor(message: string, public readonly retryAfter: number) {
+    super(message);
+    this.name = "BrowserUnavailable";
+  }
+}
+
+// Browser Run meters two things on Workers Free: new browsers (1 every 20 s,
+// 3 concurrent) and total browser time (10 min per UTC day). Every render
+// therefore launches a fresh browser and closes it the moment the PDF is out —
+// an idle browser kept alive for reuse burns the daily budget just as fast as
+// a working one (a 10-minute keep_alive costs the whole day's allowance). The
+// 20-second launch cadence is what a visitor clicking through /themes hits
+// first, so wait for the next slot rather than fail: `limits()` reports how
+// many launches remain and how long until the next is allowed.
+async function launchBrowser(env: Env): Promise<Browser> {
+  const deadline = Date.now() + LAUNCH_WAIT_MAX_MS;
+  let lastErr: unknown;
+  for (;;) {
+    const limits = await puppeteer.limits(env.BROWSER).catch(() => undefined);
+    if (!limits || limits.allowedBrowserAcquisitions > 0) {
+      try {
+        return await puppeteer.launch(env.BROWSER);
+      } catch (err) {
+        lastErr = err;
+        // Launch budget said yes but Browser Run still refused: that is the
+        // daily time cap, which no amount of waiting inside this request fixes.
+        if (limits && /429|rate limit|time limit/i.test(String(err))) {
+          const used = (limits as { usedBrowserTimeSeconds?: number }).usedBrowserTimeSeconds;
+          throw new BrowserUnavailable(
+            `Browser Run refused a launch with budget available (${String(err)}); daily browser time used: ${used ?? "?"}s`,
+            60 * 60,
+          );
+        }
+      }
+    }
+    const waitMs = Math.max(LAUNCH_POLL_MS, (limits?.timeUntilNextAllowedBrowserAcquisition ?? 1) * 1000);
+    if (Date.now() + waitMs > deadline) {
+      throw new BrowserUnavailable(
+        lastErr ? String(lastErr) : `Browser Run launch budget exhausted; next launch in ${limits?.timeUntilNextAllowedBrowserAcquisition ?? "?"}s`,
+        Math.ceil(waitMs / 1000),
+      );
+    }
+    await sleep(waitMs);
+  }
+}
+
 async function renderPdf(env: Env, t: EmbeddedTheme): Promise<Uint8Array> {
-  const browser = await puppeteer.launch(env.BROWSER);
+  const browser = await launchBrowser(env);
   try {
     const page = await browser.newPage();
     // networkidle0 lets inline data: URLs — and the Google Fonts @import some
@@ -87,7 +145,9 @@ async function renderPdf(env: Env, t: EmbeddedTheme): Promise<Uint8Array> {
     });
     return pdf;
   } finally {
-    await browser.close();
+    // Close, never merely disconnect: an open browser keeps consuming the
+    // account's daily browser-time budget until it times out.
+    await browser.close().catch(() => undefined);
   }
 }
 
@@ -178,7 +238,17 @@ export default {
     try {
       ({ pdf, hash } = await getPdf(env, ctx, r.theme));
     } catch (err) {
-      console.log(JSON.stringify({ msg: "pdf render failed", theme: r.theme.id, err: String(err) }));
+      // Include the account's Browser Run limits so a refused launch is
+      // diagnosable from the log alone.
+      const limits = await puppeteer.limits(env.BROWSER).catch(() => undefined);
+      console.log(JSON.stringify({ msg: "pdf render failed", theme: r.theme.id, err: String(err), limits }));
+      if (err instanceof BrowserUnavailable) {
+        return new Response(
+          "PDF rendering is temporarily unavailable: the site's daily rendering budget is in use. " +
+            "Please try again in a little while, or view the resume in the browser instead.",
+          { status: 503, headers: { "retry-after": String(err.retryAfter), "cache-control": "no-store" } },
+        );
+      }
       return new Response("Failed to render PDF.", { status: 502 });
     }
 
