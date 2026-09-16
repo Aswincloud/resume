@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Render resume.html -> Aswin_Resume.pdf using headless Chromium.
+# Pass a theme file to render that instead:  ./build.sh themes/07-bauhaus.html
 set -euo pipefail
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SRC="${1:-$DIR/resume.html}"
 
 # Resolve a browser.
 #  - CI (and anyone) can pass BROWSER explicitly; we use it as-is and fail
@@ -44,5 +46,5 @@ fi
 
 "$BROWSER" --headless --no-sandbox --disable-gpu --no-margins \
   --print-to-pdf="$DIR/Aswin_Resume.pdf" --print-to-pdf-no-header \
-  "file://$DIR/resume.html"
+  "file://$(cd "$(dirname "$SRC")" && pwd)/$(basename "$SRC")"
 echo "Built $DIR/Aswin_Resume.pdf"
