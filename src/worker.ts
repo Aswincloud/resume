@@ -77,37 +77,61 @@ function contentHash(t: EmbeddedTheme): Promise<string> {
 // How long an idle Browser Run session stays alive after we disconnect from
 // it, so the next render can reattach instead of launching a fresh browser.
 const BROWSER_KEEP_ALIVE_MS = 10 * 60 * 1000;
-const LAUNCH_RETRY_DELAYS_MS = [0, 1500, 3000];
+// Upper bound on how long a request waits for a browser before giving up.
+const ACQUIRE_DEADLINE_MS = 15_000;
+const ACQUIRE_POLL_MS = 1_500;
+
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+// Reattach to a kept-alive session nobody is using, or return undefined.
+async function connectIdle(env: Env): Promise<Browser | undefined> {
+  let sessions;
+  try {
+    sessions = await puppeteer.sessions(env.BROWSER);
+  } catch {
+    return undefined;
+  }
+  for (const s of sessions) {
+    if (s.connectionId) continue; // another request is using it
+    try {
+      return await puppeteer.connect(env.BROWSER, s.sessionId);
+    } catch {
+      // Session may have just expired or been claimed; try the next one.
+    }
+  }
+  return undefined;
+}
 
 // Browser Run caps how many *new* browsers an account may start per minute,
 // and with twenty-one themes a visitor clicking through the gallery hits that
 // cap on the second uncached PDF — the launch fails within half a second. So:
-// reattach to an idle session we kept alive earlier, and only launch when
-// there is none, retrying briefly if the launch is refused.
+// prefer reattaching to an idle session we kept alive after an earlier render;
+// launch only while the account still has launch budget; and otherwise wait,
+// because the session a concurrent render is holding becomes idle the moment
+// that render finishes, which is usually within a few seconds.
 async function acquireBrowser(env: Env): Promise<Browser> {
-  try {
-    for (const s of await puppeteer.sessions(env.BROWSER)) {
-      if (s.connectionId) continue; // another request is using it
-      try {
-        return await puppeteer.connect(env.BROWSER, s.sessionId);
-      } catch {
-        // Session may have just expired or been claimed; try the next one.
-      }
-    }
-  } catch {
-    // sessions() itself failing is not fatal — fall through to launch.
-  }
+  const deadline = Date.now() + ACQUIRE_DEADLINE_MS;
+  let lastErr: unknown = new Error("no Browser Run session available");
+  for (;;) {
+    const idle = await connectIdle(env);
+    if (idle) return idle;
 
-  let lastErr: unknown;
-  for (const delay of LAUNCH_RETRY_DELAYS_MS) {
-    if (delay) await new Promise((r) => setTimeout(r, delay));
-    try {
-      return await puppeteer.launch(env.BROWSER, { keep_alive: BROWSER_KEEP_ALIVE_MS });
-    } catch (err) {
-      lastErr = err;
+    const limits = await puppeteer.limits(env.BROWSER).catch(() => undefined);
+    if (!limits || limits.allowedBrowserAcquisitions > 0) {
+      try {
+        return await puppeteer.launch(env.BROWSER, { keep_alive: BROWSER_KEEP_ALIVE_MS });
+      } catch (err) {
+        lastErr = err;
+      }
+    } else {
+      lastErr = new Error(
+        `Browser Run launch budget exhausted; next launch allowed in ${limits.timeUntilNextAllowedBrowserAcquisition}s`,
+      );
     }
+
+    if (Date.now() + ACQUIRE_POLL_MS > deadline) throw lastErr;
+    await sleep(ACQUIRE_POLL_MS);
   }
-  throw lastErr;
 }
 
 async function renderPdf(env: Env, t: EmbeddedTheme): Promise<Uint8Array> {
