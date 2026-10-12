@@ -100,9 +100,11 @@ auto-approves admin PRs; it plays no part in building or deploying the resume.
 ### One-time setup
 1. Create a KV namespace and put its id in `wrangler.jsonc` (`PDF_CACHE` binding).
 2. Enable the **Browser Run** binding on the Worker.
-3. In the Cloudflare dashboard, connect this repo (Workers & Pages → Builds) with
+3. Add the Chatwoot website token as a Worker secret:
+   `wrangler secret put CHATWOOT_WEBSITE_TOKEN`.
+4. In the Cloudflare dashboard, connect this repo (Workers & Pages → Builds) with
    build command `npm run deploy`.
-4. Add the custom domain `resume.aswincloud.com` to the Worker.
+5. Add the custom domain `resume.aswincloud.com` to the Worker.
 
 ### Local PDF preview without Cloudflare
 ```bash
