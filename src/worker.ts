@@ -5,12 +5,11 @@ import puppeteer, { type Browser } from "@cloudflare/puppeteer";
 import BUNDLE, { type EmbeddedTheme } from "../themes.embedded.json";
 
 const CHATWOOT_BASE_URL = "https://support.aswincloud.com";
-// aswincloud.com inbox — see the note by chatWidget below.
-const CHATWOOT_WEBSITE_TOKEN = "A2f18JGY7uLahTifqxi74Ncd";
 
 interface Env {
   BROWSER: Fetcher;
   PDF_CACHE: KVNamespace;
+  CHATWOOT_WEBSITE_TOKEN?: string;
 }
 
 const PDF_FILENAME = "Aswin_Resume.pdf";
@@ -227,7 +226,7 @@ export default {
       // part of the tag too — adding a theme changes every page's picker.
       const etag = `"web-${hash}-${THEMES.length}"`;
       if (request.headers.get("if-none-match") === etag) return notModified(etag);
-      return new Response(webPage(r.theme), {
+      return new Response(webPage(r.theme, env.CHATWOOT_WEBSITE_TOKEN), {
         headers: { "content-type": "text/html; charset=utf-8", etag, "cache-control": REVALIDATE },
       });
     }
@@ -336,7 +335,7 @@ function topBar(current: EmbeddedTheme): string {
 // top bar with the theme picker, and screen-only styling. Everything injected
 // is scoped to @media screen, so it can never affect the PDF (which is
 // rendered from the untouched theme HTML with print emulation).
-function webPage(theme: EmbeddedTheme): string {
+function webPage(theme: EmbeddedTheme, chatwootWebsiteToken?: string): string {
   const title = theme.isDefault
     ? "Aswin — Senior Software Engineer · Resume"
     : `Aswin — Senior Software Engineer · Resume (${theme.name})`;
@@ -398,11 +397,12 @@ function webPage(theme: EmbeddedTheme): string {
   // A separate inbox would duplicate that and add nothing the source-site
   // label does not already give. Deferred to `defer` so it never blocks the
   // resume painting.
-  const chatWidget =
-    `<script>window.chatwootSettings={position:"right",type:"standard",` +
-    `launcherTitle:"Ask about Aswin"};</script>` +
-    `<script defer src="${CHATWOOT_BASE_URL}/packs/js/sdk.js" onload=` +
-    `'window.chatwootSDK.run({websiteToken:"${CHATWOOT_WEBSITE_TOKEN}",baseUrl:"${CHATWOOT_BASE_URL}"})'></script>`;
+  const chatWidget = chatwootWebsiteToken
+    ? `<script>window.chatwootSettings={position:"right",type:"standard",` +
+      `launcherTitle:"Ask about Aswin"};</script>` +
+      `<script defer src="${CHATWOOT_BASE_URL}/packs/js/sdk.js" onload=` +
+      `'window.chatwootSDK.run({websiteToken:${JSON.stringify(chatwootWebsiteToken)},baseUrl:"${CHATWOOT_BASE_URL}"})'></script>`
+    : "";
 
   // Left/right arrow keys step through themes.
   const i = THEMES.indexOf(theme);
